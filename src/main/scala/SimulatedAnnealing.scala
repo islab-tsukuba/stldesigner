@@ -16,7 +16,7 @@ class SimulatedAnnealing(startState: STLState, maxItr: Int, alpha: Double, goalS
         bestScore = nextScore
         if (bestScore < goalScore) return bestState
       }
-      if (Random.nextDouble() <= probability(score, nextScore, i / maxItr)) {
+      if (Random.nextDouble() <= CalcProbability(score, nextScore, i / maxItr)) {
         state = nextState
         score = nextScore
       }
@@ -24,7 +24,7 @@ class SimulatedAnnealing(startState: STLState, maxItr: Int, alpha: Double, goalS
     return bestState
   }
 
-  def probability(e1: Double, e2: Double, progress: Double): Double = {
+  def CalcProbability(e1: Double, e2: Double, progress: Double): Double = {
     if (e1 >= e2) 1
     else {
       val temperature = Math.pow(alpha, progress)
