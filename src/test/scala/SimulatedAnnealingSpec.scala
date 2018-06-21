@@ -13,6 +13,6 @@ class SimulatedAnnealingSpec extends FlatSpec with DiagrammedAssertions {
   }
 
   "run()" should "return optimized STLState" in {
-    assert(sa.run().getScore() < 0.3)
+    assert(sa.run().getScore < 0.4)
   }
 }
