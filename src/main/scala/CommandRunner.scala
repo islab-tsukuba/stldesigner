@@ -3,6 +3,7 @@ import scala.sys.process.{Process, ProcessLogger}
 
 class CommandRunner {
   def runCommand(cmd: String): ExecResult = {
+    println("Command: " + cmd)
     val out = ArrayBuffer[String]()
     val err = ArrayBuffer[String]()
 
@@ -12,11 +13,11 @@ class CommandRunner {
 
     val r = Process(cmd) ! logger
 
-    return ExecResult(r, out.toList, err.toList)
+    ExecResult(r, out, err)
   }
 }
 
-case class ExecResult(result: Int, out: List[String], err: List[String])
+case class ExecResult(result: Int, out: Seq[String], err: Seq[String])
 
 object CommandRunner {
   def apply(): CommandRunner = new CommandRunner()

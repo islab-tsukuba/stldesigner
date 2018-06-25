@@ -1,16 +1,13 @@
 object STLRunner {
   def main(args: Array[String]) {
     if (args.size == 0) {
-      val strs = Array("Hello", "World")
-      output(strs)
+      val server = HspiceServer()
+      println("Init servers.")
+      server.init(CommandRunner(), 8)
+      println("Close servers.")
+      server.close()
     } else {
       printf("Invalid args.")
-    }
-  }
-
-  def output(strs: Array[String]): Unit = {
-    for (str <- strs) {
-      printf("%s ", str)
     }
   }
 }

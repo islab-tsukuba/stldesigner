@@ -3,9 +3,9 @@ import scala.util.Random
 case class STLState(segments: Seq[Int]) {
   val MAX_SEGMENT_VAL = 19
   val MIN_SEGMENT_VAL = 1
-  var score = Double.MaxValue
+  var score: Double = Double.MaxValue
 
-  def getScore(): Double = {
+  def calcScore(): Double = {
     if (score != Double.MaxValue) return score
     var sum = 0L
     for (seg <- segments) sum += seg
