@@ -6,9 +6,9 @@ class HspiceServer() {
   private var portIndex = 0
   private var cmdr: CommandRunner = _
 
-  def init(cmdr: CommandRunner, serverNum: Int): Unit = {
+  def init(cmdr: CommandRunner, config: Config): Unit = {
     this.cmdr = cmdr
-    this.serverNum = serverNum
+    this.serverNum = config.hspiceServerNum
     for (i <- 0 until serverNum) {
       serverRunner()
     }
