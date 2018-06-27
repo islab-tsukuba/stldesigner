@@ -1,3 +1,1 @@
-class STLWElement {
-
-}
+case class STLWElement(line: String) {}

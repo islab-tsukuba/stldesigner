@@ -1,38 +1,10 @@
-import scala.io.Source
 import scala.util.Random
 
-case class STLState(config: Config) {
-  val MAX_SEGMENT_VAL = 19
-  val MIN_SEGMENT_VAL = 1
+case class STLState(spFile: SPFile, config: Config) {
   var score: Double = Double.MaxValue
-  var firstSPFileContent = ""
-  var subSpaces: Seq[SubSpace] = Seq()
-
-  def setStateFromSPFile(path: String): Unit = {
-    firstSPFileContent = Source.fromFile(path).getLines.mkString("\n")
-    subSpaces = Seq(
-      SubSpace(Seq(
-        Segment(0.02, 50),
-        Segment(0.02, 50),
-        Segment(0.02, 50),
-        Segment(0.02, 50),
-        Segment(0.02, 50)), 0.1),
-      SubSpace(Seq(
-        Segment(0.07, 50),
-        Segment(0.07, 50),
-        Segment(0.07, 50),
-        Segment(0.07, 50),
-        Segment(0.07, 50)), 0.35),
-      SubSpace(Seq(
-        Segment(0.03, 50),
-        Segment(0.03, 50),
-        Segment(0.03, 50),
-        Segment(0.03, 50),
-        Segment(0.03, 50)), 0.15))
-  }
+  var subSpaces: Seq[SubSpace] = spFile.subSpaces
 
   def calcScore(): Double = {
-    if (score != Double.MaxValue) return score
     var sum = 0L
     for (sub <- subSpaces; seg <- sub.segments) sum += seg.impedance
     // TODO: Normalize by max score.
@@ -40,18 +12,15 @@ case class STLState(config: Config) {
     score
   }
 
+  def getScore(): Double = score
+
   def createNeighbour(): STLState = {
-    val state = STLState(config)
-    state.setSubSpaces(getShiftedSegment())
-    state
+    val newState = this.copy()
+    newState.shiftedSegment()
   }
 
-  def setSubSpaces(subSpaces: Seq[SubSpace]): Unit = {
-    this.subSpaces = subSpaces
-  }
-
-  private def getShiftedSegment(): Seq[SubSpace] = {
-    subSpaces.map(sub => {
+  private def shiftedSegment(): STLState = {
+    subSpaces = subSpaces.map(sub => {
       val oldLen = sub.totalLength
       var newLen: Double = 0
       val newSegments = sub.segments.map(seg => {
@@ -70,6 +39,7 @@ case class STLState(config: Config) {
       })
       SubSpace(newSegments, sub.totalLength)
     })
+    this
   }
 }
 

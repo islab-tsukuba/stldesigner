@@ -13,11 +13,11 @@ Rin1            101     102     50
 
 *** Subspaces ***
 W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m
-L1              optpt1  103	10n
-C1              103	0	10p
+L1              optpt1  103     10n
+C1              103     0       10p
 W2_STL_5        optpt1  0       optpt2  0       RLGCMODEL=Z50   N=1     L=350m
-L2              optpt2  104	10n
-C2              104	0       10p
+L2              optpt2  104     10n
+C2              104     0       10p
 W3_STL_5        optpt2  0       optpt3  0       RLGCMODEL=Z50   N=1     L=150m
 *****************
 

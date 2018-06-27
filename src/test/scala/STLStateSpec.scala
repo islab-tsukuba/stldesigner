@@ -1,38 +1,9 @@
 import org.scalatest._
 
-import scala.io.Source
-
 class STLStateSpec extends FlatSpec with DiagrammedAssertions with Matchers {
-  val state = STLState(new Config)
+  val state = STLState(SPFile("./src/test/resources/template/template_W.sp"), new Config)
 
-  "createStateFromSPFile()" should "create default status from spice file." in {
-    state.setStateFromSPFile("./src/test/resources/template/template_W.sp")
-    val content = Source.fromFile("./src/test/resources/template/template_W.sp").getLines.mkString("\n")
-    assert(state.firstSPFileContent === content)
-    assert(state.subSpaces ===
-      Seq(
-        SubSpace(Seq(
-          Segment(0.02, 50),
-          Segment(0.02, 50),
-          Segment(0.02, 50),
-          Segment(0.02, 50),
-          Segment(0.02, 50)), 0.1),
-        SubSpace(Seq(
-          Segment(0.07, 50),
-          Segment(0.07, 50),
-          Segment(0.07, 50),
-          Segment(0.07, 50),
-          Segment(0.07, 50)), 0.35),
-        SubSpace(Seq(
-          Segment(0.03, 50),
-          Segment(0.03, 50),
-          Segment(0.03, 50),
-          Segment(0.03, 50),
-          Segment(0.03, 50)), 0.15))
-    )
-  }
-
-  "calcScore()" should "return sum of Seq" in {
+  "calcScore()" should "return score of first state." in {
     assert(state.calcScore === 1)
   }
 
