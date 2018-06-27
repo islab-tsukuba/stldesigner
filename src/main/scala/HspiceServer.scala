@@ -15,7 +15,9 @@ class HspiceServer() {
   }
 
   private def serverRunner(): Unit = {
-    val ret = cmdr.runCommand("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    val cmd = "hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt"
+    println("Command: " + cmd)
+    val ret = cmdr.runCommand(cmd)
     if (ret.result != 0) {
       throw new Exception("Initialization of hspice server is failed.")
     }
@@ -56,7 +58,9 @@ class HspiceServer() {
 
   def close(): Unit = {
     for (port <- serverPorts) {
-      val ret = cmdr.runCommand("hspice -CC -K -port " + port)
+      val cmd = "hspice -CC -K -port " + port
+      println("Command: " + cmd)
+      val ret = cmdr.runCommand(cmd)
       if (ret.result != 0) {
         throw new Exception("Termination of hspice server is failed.")
       }
