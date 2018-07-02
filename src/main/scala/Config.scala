@@ -1,9 +1,11 @@
 class Config {
   var hspiceServerNum = 8
-  var segmentImpedanceMin = 30
-  var segmentImmpedanceMax = 120
-  var segmentImpedanceStep = 5
   var segmentLengthStep = 0.001 // (1[mm])
+  // TODO: Read from spice file.
+  var segmentImpList = Seq(
+    "Z30", "Z35", "Z40", "Z45", "Z50", "Z55",
+    "Z60", "Z65", "Z70", "Z75", "Z80", "Z85",
+    "Z90", "Z95", "Z100", "Z105", "Z110", "Z115", "Z120")
 
   def fromFile(path: String): Unit = {
   }

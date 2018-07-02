@@ -17,7 +17,3 @@ class CommandRunner {
 }
 
 case class ExecResult(result: Int, out: Seq[String], err: Seq[String])
-
-object CommandRunner {
-  def apply(): CommandRunner = new CommandRunner()
-}

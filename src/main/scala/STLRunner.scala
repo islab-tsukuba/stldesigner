@@ -3,7 +3,7 @@ object STLRunner {
     if (args.size == 0) {
       val server = HspiceServer()
       println("Init servers.")
-      server.init(CommandRunner(), new Config)
+      server.init(new CommandRunner(), new Config)
       println("Close servers.")
       server.close()
     } else {
