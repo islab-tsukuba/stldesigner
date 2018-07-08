@@ -13,7 +13,7 @@ case class STLState(spFile: SPFile, config: Config) {
   }
 
   private def shiftSegment(): STLState = {
-    val stlElements: List[STLElement] = spFile.getSTLElements(config)
+    val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.getNeighbour())
     spFile.setSTLElements(newStlElements)
     this

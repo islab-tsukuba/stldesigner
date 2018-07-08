@@ -4,10 +4,10 @@ import scala.io.Source
 
 class SPFileSpec extends FlatSpec {
   val conf = new Config()
-  val spFile = SPFile("./src/test/resources/template/template_W.sp")
+  val spFile = SPFile("./src/test/resources/template/template_W.sp", conf)
 
   "getSTLElements()" should "return STL element." in {
-    val elements = spFile.getSTLElements(conf)
+    val elements = spFile.getSTLElements()
     assert(elements.map(element => element.line) === List(
       "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
       "W2_STL_5        optpt1  0       optpt2  0       RLGCMODEL=Z50   N=1     L=350m",
@@ -18,7 +18,7 @@ class SPFileSpec extends FlatSpec {
   }
 
   "setSTLElements()" should "sets STL element." in {
-    val elements = spFile.getSTLElements(conf)
+    val elements = spFile.getSTLElements()
     spFile.setSTLElements(elements)
     assert(spFile.stlElements === elements)
   }

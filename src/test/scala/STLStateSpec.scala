@@ -3,8 +3,9 @@ import org.scalatest._
 import scala.io.Source
 
 class STLStateSpec extends FlatSpec {
+  val conf = new Config
   val state =
-    STLState(SPFile("./src/test/resources/template/template_W.sp"), new Config)
+    STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf)
 
   "calcScore()" should "return score of first state." in {
     assert(state.calcScore(new CommandRunner()) === 1)
