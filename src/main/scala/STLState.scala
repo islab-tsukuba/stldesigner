@@ -2,9 +2,8 @@
 
 case class STLState(spFile: SPFile, config: Config) {
   var score: Double = Double.MaxValue
-  var stlElements: List[STLElement] = spFile.getSTLElements(config)
 
-  def calcScore(): Double = {
+  def calcScore(cmdRunner: CommandRunner): Double = {
     1.0
   }
 
@@ -14,7 +13,9 @@ case class STLState(spFile: SPFile, config: Config) {
   }
 
   private def shiftSegment(): STLState = {
-    stlElements = stlElements.map(stlElement => stlElement.getNeighbour())
+    val stlElements: List[STLElement] = spFile.getSTLElements(config)
+    val newStlElements = stlElements.map(stlElement => stlElement.getNeighbour())
+    spFile.setSTLElements(newStlElements)
     this
   }
 }

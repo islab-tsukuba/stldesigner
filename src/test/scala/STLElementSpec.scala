@@ -10,6 +10,7 @@ class STLElementSpec extends FlatSpec with DiagrammedAssertions with Matchers {
 
   "STLWElement()" should "read parameters." in {
     assert(stlElement.name === "W1_STL_5")
+    assert(stlElement.nameIndex === 1)
     assert(stlElement.sepNum === 5)
     assert(stlElement.params === Array("102", "0", "optpt1", "0", "RLGCMODEL=Z50", "N=1", "L=100m"))
     assert(stlElement.nodes === Array("102", "0", "optpt1", "0"))

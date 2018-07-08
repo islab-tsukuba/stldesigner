@@ -18,6 +18,7 @@ trait STLElement {
 case class STLWElement(line: String, index: Int, conf: Config) extends STLElement {
   val splitLine: Array[String] = line.split("""\s+""")
   val name: String = splitLine(0)
+  val nameIndex: Int = """^.(\d)_.*""".r.findAllIn(name).group(1).toInt
   val sepNum: Int = name.split("_").last.toInt
   val params: Array[String] = splitLine.drop(1)
   val nodes: Array[String] = params.take(4)
@@ -41,8 +42,8 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
     val totalLen = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
     for (i <- 0 until sepNum) yield {
       val name = this.name.split("_")(0) + "_SEG_" + (i + 1).toString
-      val node_start = if (i == 0) this.nodes(0) else 2000 + i - 1
-      val node_end = if (i == sepNum - 1) this.nodes(2) else 2000 + i
+      val node_start = if (i == 0) this.nodes(0) else 1000 * nameIndex * 2 + i - 1
+      val node_end = if (i == sepNum - 1) this.nodes(2) else 1000 * nameIndex * 2 + i
       val nodes = Array(node_start.toString, this.nodes(1), node_end.toString, this.nodes(3))
       var len = totalLen / sepNum
       lenSum += len

@@ -20,4 +20,15 @@ case class SPFile(path: String) {
   def setSTLElements(elements: List[STLElement]): Unit = {
     stlElements = elements
   }
+
+  def getString(): String = {
+    firstSPFileContent.zipWithIndex.flatMap {
+      case (line, i) =>
+        var ret: List[String] = List(line)
+        for (stlElement <- stlElements) {
+          if (stlElement.index == i) ret = stlElement.getElementLines()
+        }
+        ret
+    }.mkString("\n")
+  }
 }

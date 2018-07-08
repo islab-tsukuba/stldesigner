@@ -1,6 +1,8 @@
 import org.scalatest._
 
-class SPFileSpec extends FlatSpec with DiagrammedAssertions {
+import scala.io.Source
+
+class SPFileSpec extends FlatSpec {
   val conf = new Config()
   val spFile = SPFile("./src/test/resources/template/template_W.sp")
 
@@ -19,5 +21,10 @@ class SPFileSpec extends FlatSpec with DiagrammedAssertions {
     val elements = spFile.getSTLElements(conf)
     spFile.setSTLElements(elements)
     assert(spFile.stlElements === elements)
+  }
+
+  val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
+  "getString()" should "return all spice file content." in {
+    assert(spFile.getString == newSpFile.getLines().mkString("\n"))
   }
 }

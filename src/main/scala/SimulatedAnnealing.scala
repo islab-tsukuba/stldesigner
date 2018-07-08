@@ -1,16 +1,17 @@
 import scala.util.Random
 
-class SimulatedAnnealing(startState: STLState, maxItr: Int, alpha: Double, goalScore: Double) {
+class SimulatedAnnealing(startState: STLState, maxItr: Int, alpha: Double, goalScore: Double,
+                         cmdRunner: CommandRunner) {
   Random.setSeed(1)
 
   def run(): STLState = {
     var state = startState
-    var score = startState.calcScore()
+    var score = startState.calcScore(cmdRunner)
     var bestState = state
     var bestScore = score
     for (i <- 0 until maxItr) {
       val nextState = state.createNeighbour()
-      val nextScore = nextState.calcScore()
+      val nextScore = nextState.calcScore(cmdRunner)
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
@@ -34,6 +35,6 @@ class SimulatedAnnealing(startState: STLState, maxItr: Int, alpha: Double, goalS
 }
 
 object SimulatedAnnealing {
-  def apply(startState: STLState, maxItr: Int, alpha: Double, goalE: Double): SimulatedAnnealing =
-    new SimulatedAnnealing(startState, maxItr, alpha, goalE)
+  def apply(startState: STLState, maxItr: Int, alpha: Double, goalE: Double, cmdRunner: CommandRunner):
+  SimulatedAnnealing = new SimulatedAnnealing(startState, maxItr, alpha, goalE, cmdRunner)
 }
