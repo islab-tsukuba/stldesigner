@@ -2,7 +2,6 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
 class HspiceServerSpec extends FlatSpec with DiagrammedAssertions with PrivateMethodTester with MockFactory {
-  val hServer = HspiceServer()
   val cmdr = stub[CommandRunner]
   val serverOut = (port: Int) => Seq("Using: /usr/synopsys/J-2014.09-SP1-2/hspice/amd64/hspice -CC",
     " lic:",
@@ -21,31 +20,31 @@ class HspiceServerSpec extends FlatSpec with DiagrammedAssertions with PrivateMe
     "***************************************",
     "Server is started on 389b0610af9c:" + port)
 
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25001), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25002), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25003), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25004), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25005), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25006), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25007), Seq())).once()
+  (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
+    .returns(ExecResult(0, serverOut(25008), Seq())).once()
+  val hServer = new HspiceServer(cmdr, new Config)
+  "HspiceServer()" should "exec hspice servers and set server ports" in {
+    assert(hServer.getServerPorts() === Seq(25001, 25002, 25003, 25004, 25005, 25006, 25007, 25008))
+  }
+
   "getServerPort()" should "return the server port of hspice server" in {
     val getServerPort: PrivateMethod[Int] = PrivateMethod[Int]('getServerPort)
     val portNum = hServer invokePrivate getServerPort(serverOut(25001))
     assert(portNum === 25001)
-  }
-
-  "init()" should "exec hspice servers and set server ports" in {
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25001), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25002), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25003), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25004), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25005), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25006), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25007), Seq())).once()
-    (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
-      .returns(ExecResult(0, serverOut(25008), Seq())).once()
-    hServer.init(cmdr, new Config)
-    assert(hServer.getServerPorts() === Seq(25001, 25002, 25003, 25004, 25005, 25006, 25007, 25008))
   }
 
   "runSpiceFiles()" should "run hspice simulations" in {

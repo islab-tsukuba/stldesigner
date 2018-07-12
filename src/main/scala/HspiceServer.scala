@@ -1,36 +1,12 @@
 
 
-class HspiceServer() {
-  private var serverNum: Int = 0
+class HspiceServer(cmdr: CommandRunner, config: Config) {
+  private val serverNum: Int = config.hspiceServerNum
   private var serverPorts: Seq[Int] = Seq()
   private var portIndex = 0
-  private var cmdr: CommandRunner = _
 
-  def init(cmdr: CommandRunner, config: Config): Unit = {
-    this.cmdr = cmdr
-    this.serverNum = config.hspiceServerNum
-    for (i <- 0 until serverNum) {
-      serverRunner()
-    }
-  }
-
-  private def serverRunner(): Unit = {
-    val cmd = "hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt"
-    println("Command: " + cmd)
-    val ret = cmdr.runCommand(cmd)
-    if (ret.result != 0) {
-      throw new Exception("Initialization of hspice server is failed.")
-    }
-    serverPorts = serverPorts :+ getServerPort(ret.out)
-  }
-
-  private def getServerPort(out: Seq[String]): Int = {
-    val r = """^Server is started on .*:(\d+)$""".r
-    for (line <- out) {
-      val m = r.findFirstMatchIn(line)
-      if (m.isDefined) return m.get.group(1).toInt
-    }
-    0
+  for (i <- 0 until serverNum) {
+    serverRunner()
   }
 
   def getServerPorts(): Seq[Int] = serverPorts
@@ -68,14 +44,23 @@ class HspiceServer() {
     serverPorts = Seq()
   }
 
-}
-
-object HspiceServer {
-  private val hspiceServer = new HspiceServer()
-
-  def getInstance(): HspiceServer = {
-    hspiceServer
+  private def serverRunner(): Unit = {
+    val cmd = "hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt"
+    println("Command: " + cmd)
+    val ret = cmdr.runCommand(cmd)
+    if (ret.result != 0) {
+      throw new Exception("Initialization of hspice server is failed.")
+    }
+    serverPorts = serverPorts :+ getServerPort(ret.out)
   }
 
-  def apply(): HspiceServer = hspiceServer
+  private def getServerPort(out: Seq[String]): Int = {
+    val r = """^Server is started on .*:(\d+)$""".r
+    for (line <- out) {
+      val m = r.findFirstMatchIn(line)
+      if (m.isDefined) return m.get.group(1).toInt
+    }
+    0
+  }
+
 }

@@ -3,7 +3,11 @@
 case class STLState(spFile: SPFile, config: Config) {
   var score: Double = Double.MaxValue
 
-  def calcScore(cmdRunner: CommandRunner): Double = {
+  def calcScore(server: HspiceServer): Double = {
+    val hash = math.abs(spFile.getSTLElements().hashCode())
+    val filePath = "/dev/shm/" + hash + ".sp"
+    spFile.writeToFile(filePath)
+    server.runSpiceFile(filePath)
     1.0
   }
 

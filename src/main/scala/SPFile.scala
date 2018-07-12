@@ -1,10 +1,12 @@
+import java.io.{File, PrintWriter}
+
 import scala.io.Source
 
 case class SPFile(path: String, config: Config) {
   val firstSPFileContent: List[String] = Source.fromFile(path).getLines.toList
-  var stlElements: List[STLElement] = List()
+  var stlElements: List[STLElement] = getFirstSTLElements()
 
-  def getSTLElements(): List[STLElement] = {
+  def getFirstSTLElements(): List[STLElement] = {
     firstSPFileContent.zipWithIndex.filter {
       case (line, _) => line.matches("""^.[0-9]+_STL_[0-9]+.*""")
     }.map {
@@ -17,8 +19,16 @@ case class SPFile(path: String, config: Config) {
     }
   }
 
+  def getSTLElements(): List[STLElement] = stlElements
+
   def setSTLElements(elements: List[STLElement]): Unit = {
     stlElements = elements
+  }
+
+  def writeToFile(path: String): Unit = {
+    val writer = new PrintWriter(new File(path))
+    writer.write(getString())
+    writer.close()
   }
 
   def getString(): String = {
