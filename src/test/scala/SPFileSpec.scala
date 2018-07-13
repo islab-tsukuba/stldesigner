@@ -2,7 +2,7 @@ import org.scalatest._
 
 import scala.io.Source
 
-class SPFileSpec extends FlatSpec {
+class SPFileSpec extends FlatSpec with DiagrammedAssertions {
   val conf = new Config()
   val spFile = SPFile("./src/test/resources/template/template_W.sp", conf)
 
@@ -24,7 +24,12 @@ class SPFileSpec extends FlatSpec {
   }
 
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
+  val newFileStr = newSpFile.getLines().mkString("\n")
   "getString()" should "return all spice file content." in {
-    assert(spFile.getString == newSpFile.getLines().mkString("\n"))
+    assert(spFile.getString === newFileStr)
+  }
+
+  "getTran()" should "return trun command of spice file." in {
+    assert(spFile.getTran === Tran(".TRAN 10p 24n 20n"))
   }
 }

@@ -3,7 +3,7 @@ import org.scalatest._
 
 import scala.io.Source
 
-class STLStateSpec extends FlatSpec with MockFactory {
+class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val server = stub[MockableSPServer]
@@ -22,6 +22,7 @@ class STLStateSpec extends FlatSpec with MockFactory {
 
   "createNeighbour()" should "return STLState which has shifted segments." in {
     val newState = state.createNeighbour()
-    assert(newState.spFile.getString().split("\n").length == newSpFile.getLines().length)
+    val newFileLength = newSpFile.getLines().length
+    assert(newState.spFile.getString().split("\n").length === newFileLength)
   }
 }
