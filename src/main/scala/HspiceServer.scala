@@ -1,7 +1,7 @@
 
 
-class HspiceServer(cmdr: CommandRunner, config: Config) {
-  private val serverNum: Int = config.hspiceServerNum
+class HspiceServer(cmdr: CommandRunner, conf: Config) {
+  private val serverNum: Int = conf.hspiceServerNum
   private var serverPorts: Seq[Int] = Seq()
   private var portIndex = 0
 

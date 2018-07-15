@@ -1,3 +1,5 @@
+import java.nio.file.{Files, Paths}
+
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
@@ -16,9 +18,12 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
   class MockableSPServer extends HspiceServer(cmdr, new Config())
 
   "calcScore()" should "return score of first state." in {
+    // Create dummy lisFile.
+    val hash = math.abs(state.spFile.getSTLElements().hashCode())
+    Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
+      Paths.get("/dev/shm/" + hash + ".lis"))
     assert(state.calcScore(server) === 1)
   }
-
 
   "createNeighbour()" should "return STLState which has shifted segments." in {
     val newState = state.createNeighbour()

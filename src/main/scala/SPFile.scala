@@ -43,7 +43,7 @@ case class SPFile(path: String, config: Config) {
   }
 
   def getTran(): Tran = {
-    val tranLine = firstSPFileContent.filter(line => line.matches("""^\.TRAN.*"""))(0)
+    val tranLine = firstSPFileContent.filter(line => line.matches("""^\.TRAN.*""")).head
     Tran(tranLine)
   }
 }

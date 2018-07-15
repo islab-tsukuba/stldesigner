@@ -1,6 +1,6 @@
 
 
-case class STLState(spFile: SPFile, config: Config) {
+case class STLState(spFile: SPFile, conf: Config) {
   var score: Double = Double.MaxValue
 
   def calcScore(server: HspiceServer): Double = {
@@ -8,6 +8,8 @@ case class STLState(spFile: SPFile, config: Config) {
     val filePath = "/dev/shm/" + hash + ".sp"
     spFile.writeToFile(filePath)
     server.runSpiceFile(filePath)
+    val lisFile = LisFile(
+      filePath.replace(".sp", ".lis"), conf, spFile.getTran())
     1.0
   }
 
