@@ -45,7 +45,6 @@ class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
     }
 
     // Shift eye diagram.
-    print("eyeStart: " + eyeStart)
     eyeDiagram = eyeDiagram.map(valts => valts.drop(eyeStart) ++ valts.take(eyeStart))
 
     // Calc eye height.
