@@ -1,6 +1,6 @@
 import scala.io.Source
 
-case class LisFile(path: String, conf: Config, tran: Tran) {
+case class LisFile(path: String, conf: Config) {
   val content = Source.fromFile(path).getLines().toSeq
 
   def getVoltage(pointName: String): Seq[Double] = {

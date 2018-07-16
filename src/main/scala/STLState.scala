@@ -8,8 +8,7 @@ case class STLState(spFile: SPFile, conf: Config) {
     val filePath = "/dev/shm/" + hash + ".sp"
     spFile.writeToFile(filePath)
     server.runSpiceFile(filePath)
-    val lisFile = LisFile(
-      filePath.replace(".sp", ".lis"), conf, spFile.getTran())
+    val lisFile = LisFile(filePath.replace(".sp", ".lis"), conf)
     1.0
   }
 

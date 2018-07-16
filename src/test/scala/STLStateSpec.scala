@@ -22,7 +22,7 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
     val hash = math.abs(state.spFile.getSTLElements().hashCode())
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/" + hash + ".lis"))
-    assert(state.calcScore(server) === 1)
+    assert(state.calcScore(server) === 1.0)
   }
 
   "createNeighbour()" should "return STLState which has shifted segments." in {
