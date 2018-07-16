@@ -9,14 +9,14 @@ trait Element {
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
                     conf: Config) extends Element {
-  def getString(): String = {
+  override def getString(): String = {
     name + " " + nodes.mkString(" ") + " " +
       values.map {
         case (key, value) => key + "=" + value
       }.mkString(" ")
   }
 
-  def shift(): Element = {
+  override def shift(): Element = {
     val lenStr = values.getOrElse("L", "0.0")
     val len = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
     val rand1 = Random.nextDouble()
