@@ -50,7 +50,7 @@ class HspiceServerSpec extends FlatSpec with DiagrammedAssertions with PrivateMe
   "runSpiceFiles()" should "run hspice simulations" in {
     for (i <- 0 to 10) {
       (cmdr.runCommand _)
-        .when("hspice -C ./sample%d.sp -port 2500%d -o ./sample%d".format(i, i % 8 + 1, i))
+        .when("hspice -CC ./sample%d.sp -port 2500%d -o ./sample%d".format(i, i % 8 + 1, i))
         .returns(ExecResult(0, Seq(), Seq()))
     }
     val result = hServer.runSpiceFile("./sample0.sp").result

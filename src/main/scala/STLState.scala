@@ -9,7 +9,8 @@ case class STLState(spFile: SPFile, conf: Config) {
     spFile.writeToFile(filePath)
     server.runSpiceFile(filePath)
     val lisFile = LisFile(filePath.replace(".sp", ".lis"), conf)
-    1.0
+    val evaluator = new EyeSizeEvaluator(new Config(), spFile.getTran())
+    evaluator.evaluate(lisFile)
   }
 
   def createNeighbour(): STLState = {

@@ -13,7 +13,7 @@ class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
       val singlePointScore = calcSinglePoint(vList)
       score += singlePointScore * v
     }
-    1.0
+    score
   }
 
   private def calcSinglePoint(vList: Seq[Double]): Double = {

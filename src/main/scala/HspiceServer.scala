@@ -25,8 +25,9 @@ class HspiceServer(cmdr: CommandRunner, conf: Config) {
   }
 
   def runSpiceFile(path: String): ExecResult = {
-    val cmd = "hspice -C %s -port %d -o %s"
+    val cmd = "hspice -CC %s -port %d -o %s"
       .format(path, serverPorts(portIndex), path.replace(".sp", ""))
+    println("Command: " + cmd)
     portIndex += 1
     if (portIndex >= serverPorts.size) portIndex = 0
     cmdr.runCommand(cmd)
