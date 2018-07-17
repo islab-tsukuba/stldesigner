@@ -84,13 +84,16 @@ class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
     b.breakable {
       for (i <- eyeWidthStart until eyeSize) {
         eyeWidthEnd = i
-        if (eyeUnder(i) > eyeUpper(i)) {
+        if (eyeUnder(i) >= eyeUpper(i)) {
           b.break
         }
       }
     }
     val eyeWidth = (eyeWidthEnd - eyeWidthStart) * tran.resolution / conf.eyeTime
 
+    if ((eyeHeight + eyeWidth) <= 0) {
+      return Double.MaxValue
+    }
     1.0 / (eyeHeight + eyeWidth)
   }
 }

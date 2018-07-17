@@ -1,6 +1,6 @@
 import scala.util.Random
 
-class SimulatedAnnealing(firstState: STLState, maxItr: Int, alpha: Double, goalScore: Double,
+class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, goalScore: Double,
                          server: HspiceServer) {
   Random.setSeed(1)
 
@@ -17,11 +17,12 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, alpha: Double, goalS
         bestScore = nextScore
         if (bestScore < goalScore) return bestState
       }
-      if (Random.nextDouble() <= calcProbability(score, nextScore, i / maxItr)) {
+      println("Probability: " + calcProbability(score, nextScore, i.toDouble / maxItr.toDouble))
+      if (Random.nextDouble() <= calcProbability(score, nextScore, i.toDouble / maxItr.toDouble)) {
         state = nextState
         score = nextScore
       }
-      println("Gen: " + i + ", Score: " + score)
+      println("Gen: " + i + ", Score: " + nextScore)
     }
     println("Best score: " + bestScore)
     bestState
@@ -30,7 +31,7 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, alpha: Double, goalS
   def calcProbability(e1: Double, e2: Double, progress: Double): Double = {
     if (e1 >= e2) 1
     else {
-      val temperature = Math.pow(alpha, progress)
+      val temperature = Math.pow(targetTemp, progress)
       Math.pow(Math.E, (e1 - e2) / temperature)
     }
   }

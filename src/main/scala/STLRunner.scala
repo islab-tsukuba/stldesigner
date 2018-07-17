@@ -5,7 +5,7 @@ object STLRunner {
       val server = new HspiceServer(new CommandRunner(), new Config)
       val conf = new Config()
       val firstState = STLState(SPFile("./template/template_W.sp", conf), conf)
-      val sa = SimulatedAnnealing(firstState, 1000, 0.1, 0.3, server)
+      val sa = SimulatedAnnealing(firstState, 10000, 0.01, 0.3, server)
       sa.run()
       println("Close servers.")
       server.close()
