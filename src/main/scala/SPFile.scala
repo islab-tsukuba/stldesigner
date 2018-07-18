@@ -46,4 +46,6 @@ case class SPFile(path: String, config: Config) {
     val tranLine = firstSPFileContent.filter(line => line.matches("""^\.TRAN.*""")).head
     Tran(tranLine)
   }
+
+  override def hashCode(): Int = getString().hashCode
 }
