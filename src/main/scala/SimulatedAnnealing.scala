@@ -1,7 +1,7 @@
 import scala.util.Random
 
 class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, goalScore: Double,
-                         server: HspiceServer) {
+                         server: HspiceServer, id: String) {
   Random.setSeed(1)
 
   def run(): STLState = {
@@ -15,6 +15,7 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, 
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
+        bestState.spFile.writeToFile("./output/" + id + "/gen" + i + ".sp")
         if (bestScore < goalScore) return bestState
       }
       println("Probability: " + calcProbability(score, nextScore, i.toDouble / maxItr.toDouble))
@@ -38,6 +39,7 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, 
 }
 
 object SimulatedAnnealing {
-  def apply(firstState: STLState, maxItr: Int, alpha: Double, goalE: Double, server: HspiceServer):
-  SimulatedAnnealing = new SimulatedAnnealing(firstState, maxItr, alpha, goalE, server)
+  def apply(firstState: STLState, maxItr: Int, alpha: Double, goalE: Double,
+            server: HspiceServer, id: String):
+  SimulatedAnnealing = new SimulatedAnnealing(firstState, maxItr, alpha, goalE, server, id)
 }
