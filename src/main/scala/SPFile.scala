@@ -1,4 +1,6 @@
 import java.io.{File, PrintWriter}
+import java.math.BigInteger
+import java.security.MessageDigest
 
 import scala.io.Source
 
@@ -47,5 +49,11 @@ case class SPFile(path: String, config: Config) {
     Tran(tranLine)
   }
 
-  override def hashCode(): Int = getString().hashCode
+  def md5Hash(): String = {
+    val md = MessageDigest.getInstance("MD5")
+    val digest = md.digest(getString().getBytes)
+    val bigInt = new BigInteger(1, digest)
+    val hashedString = bigInt.toString(16)
+    hashedString
+  }
 }
