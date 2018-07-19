@@ -7,8 +7,8 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, 
   Random.setSeed(1)
 
   def run(): STLState = {
-    var state = firstState
-    var score = firstState.calcScore(server)
+    var state = firstState.createRandom()
+    var score = state.calcScore(server)
     var bestState = state
     var bestScore = score
     for (i <- 0 until maxItr) {

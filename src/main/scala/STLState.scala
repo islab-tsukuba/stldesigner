@@ -42,4 +42,16 @@ case class STLState(spFile: SPFile, conf: Config) {
     spFile.setSTLElements(newStlElements)
     this
   }
+
+  def createRandom(): STLState = {
+    val newState = this.copy()
+    newState.createRandom()
+  }
+
+  private def assignRandomSegment(): STLState = {
+    val stlElements: List[STLElement] = spFile.getSTLElements()
+    val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
+    spFile.setSTLElements(newStlElements)
+    this
+  }
 }

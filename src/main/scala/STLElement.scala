@@ -6,6 +6,8 @@ trait STLElement {
 
   def getNeighbour(): STLElement
 
+  def assignRandom(): STLElement
+
   def getElementLines(): List[String]
 
   // TODO: implement crossover for GA.
@@ -26,13 +28,19 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
   val values: mutable.LinkedHashMap[String, String] = createValueMap()
   var elements: Seq[Element] = createElements()
 
-  def getNeighbour(): STLElement = {
+  override def getNeighbour(): STLElement = {
     val newSTLElement = this.copy()
     newSTLElement.elements = this.elements.map(element => element.shift())
     newSTLElement
   }
 
-  def getElementLines(): List[String] = {
+  override def assignRandom(): STLElement = {
+    val newSTLElement = this.copy()
+    newSTLElement.elements = this.elements.map(element => element.random())
+    newSTLElement
+  }
+
+  override def getElementLines(): List[String] = {
     elements.map(element => element.getString()).toList
   }
 

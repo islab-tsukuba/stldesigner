@@ -5,6 +5,8 @@ trait Element {
   def getString(): String
 
   def shift(): Element
+
+  def random(): Element
 }
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
@@ -36,6 +38,16 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     val newImp = conf.segmentImpList(newImpIndex)
 
+    val newElement = this.copy()
+    newElement.values.put("L", UnitUtil.doubleToStr(newLen))
+    newElement.values.put("RLGCMODEL", newImp)
+    newElement
+  }
+
+  override def random(): Element = {
+    val newLen = Random.nextDouble()
+    val newImpIndex = Random.nextInt(conf.segmentImpList.length)
+    val newImp = conf.segmentImpList(newImpIndex)
     val newElement = this.copy()
     newElement.values.put("L", UnitUtil.doubleToStr(newLen))
     newElement.values.put("RLGCMODEL", newImp)
