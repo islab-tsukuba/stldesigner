@@ -1,3 +1,5 @@
+import java.io.File
+
 import scala.util.Random
 
 class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, goalScore: Double,
@@ -15,7 +17,10 @@ class SimulatedAnnealing(firstState: STLState, maxItr: Int, targetTemp: Double, 
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
-        bestState.spFile.writeToFile("./output/" + id + "/gen" + i + ".sp")
+        val dirPath = "./output/" + id + "/"
+        val dir = new File(dirPath)
+        if (!dir.exists()) dir.mkdir()
+        bestState.spFile.writeToFile(dirPath + "gen" + i + ".sp")
         if (bestScore < goalScore) return bestState
       }
       println("Probability: " + calcProbability(score, nextScore, i.toDouble / maxItr.toDouble))
