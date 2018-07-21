@@ -22,4 +22,12 @@ class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
     saState.moveToNextState()
     assert(saState.generation === 2)
   }
+
+  "probability()" should "return one if e1 is grater than e2" in {
+    assert(saState.calcProbability(1.0, 0.5, 0.5) === 1)
+  }
+
+  "probability()" should "return probability of the Simulated Annealing" in {
+    assert(saState.calcProbability(0.5, 1.0, 0.5) === 0.006737946999085469)
+  }
 }

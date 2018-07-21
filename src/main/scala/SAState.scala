@@ -19,7 +19,6 @@ class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: St
       val dir = new File(dirPath)
       if (!dir.exists()) dir.mkdir()
       bestState.spFile.writeToFile(dirPath + "gen" + generation + ".sp")
-      if (bestScore < conf.saConf.goalScore) return bestState
     }
     val prob = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
     println("Probability: " + prob)
