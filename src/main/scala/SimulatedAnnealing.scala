@@ -3,12 +3,12 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.Random
 
-class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Config, name: String) {
+class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Config) {
   Random.setSeed(1)
 
   def run(): STLState = {
     var states = (for (i <- 0 until conf.saConf.stateNum)
-      yield new SAState(firstState.createRandom(), server, conf, name, i + 1)).toList
+      yield new SAState(firstState.createRandom(), server, conf, conf.name, i + 1)).toList
     for (i <- 0 until conf.saConf.maxItr) {
       val moveTask: Future[List[SAState]] = Future.sequence {
         states.map(state => state.moveToNextState())
@@ -23,6 +23,6 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
 }
 
 object SimulatedAnnealing {
-  def apply(firstState: STLState, server: HspiceServer, conf: Config, name: String):
-  SimulatedAnnealing = new SimulatedAnnealing(firstState, server, conf, name)
+  def apply(firstState: STLState, server: HspiceServer, conf: Config):
+  SimulatedAnnealing = new SimulatedAnnealing(firstState, server, conf)
 }

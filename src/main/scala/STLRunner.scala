@@ -5,7 +5,7 @@ object STLRunner {
       val server = new HspiceServer(new CommandRunner(), new Config)
       val conf = new Config()
       val firstState = STLState(SPFile("./data/template/template_W_akt_isolation_light.sp", conf), conf, 0)
-      val sa = SimulatedAnnealing(firstState, server, conf, "eye_size")
+      val sa = SimulatedAnnealing(firstState, server, conf)
       sa.run()
       println("Close servers.")
       server.close()

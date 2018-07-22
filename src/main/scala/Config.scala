@@ -10,6 +10,7 @@ class Config {
   var eyeTime = 2e-9
   var eyeWidthMargin = 0.2
   var saConf = SimulatedAnnealingConfig(4000, 0.01, 8)
+  var name = "eye_size_multi_thread"
 
   def fromFile(path: String): Unit = {
   }
