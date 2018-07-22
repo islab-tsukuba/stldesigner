@@ -16,6 +16,7 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
       states = Await.result(moveTask, Duration.Inf)
       println("Gen: " + i
         + "\nScores: [" + states.map(state => state.score).mkString(" ") + "]"
+        + "\nBest Scores: [" + states.map(state => state.bestScore).mkString(" ") + "]"
         + "\nProbavility: [" + states.map(state => state.probability).mkString(" ") + "]")
     }
     val best = states.maxBy(state => state.bestScore)
