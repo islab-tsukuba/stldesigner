@@ -13,7 +13,6 @@ class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: St
   var generation = 1
 
   def moveToNextState(): Future[SAState] = {
-    println("Create next STLState " + id + ".")
     val nextState = state.createNeighbour()
     Future {
       val nextScore = nextState.calcScore(server)
