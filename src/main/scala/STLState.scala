@@ -1,6 +1,7 @@
 import java.io.{File, FilenameFilter}
 
-case class STLState(spFile: SPFile, conf: Config) {
+case class STLState(spFile: SPFile, conf: Config, var id: Int) {
+  val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
 
   def calcScore(server: HspiceServer): Double = {
@@ -8,19 +9,19 @@ case class STLState(spFile: SPFile, conf: Config) {
       return score
     }
     val hash = spFile.md5Hash
-    val dirPath = "/dev/shm/"
-    val fileName = hash + ".sp"
-    val filePath = dirPath + fileName
-    spFile.writeToFile(filePath)
-    server.runSpiceFile(filePath)
-    val lisFile = LisFile(filePath.replace(".sp", ".lis"), conf)
+    val outputName = hash + "_" + id
+    val spFilePath = dirPath + outputName + ".sp"
+    val lisFilePath = dirPath + outputName + ".lis"
+    spFile.writeToFile(spFilePath)
+    server.runSpiceFile(spFilePath)
+    val lisFile = LisFile(lisFilePath, conf)
     val evaluator = new EyeSizeEvaluator(new Config(), spFile.getTran())
     score = evaluator.evaluate(lisFile)
-    deleteFileByPrefix(dirPath, hash)
+    deleteFileByPrefix(dirPath, outputName)
     score
   }
 
-  private def deleteFileByPrefix(path: String, prefix: String): Unit = {
+  def deleteFileByPrefix(path: String, prefix: String): Unit = {
     val dir = new File(path)
     val files = dir.listFiles(
       new FilenameFilter() {
@@ -45,10 +46,10 @@ case class STLState(spFile: SPFile, conf: Config) {
 
   def createRandom(): STLState = {
     val newState = this.copy()
-    newState.createRandom()
+    newState.assignRandomSegment()
   }
 
-  private def assignRandomSegment(): STLState = {
+  def assignRandomSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
     spFile.setSTLElements(newStlElements)

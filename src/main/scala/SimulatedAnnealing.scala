@@ -1,13 +1,22 @@
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 import scala.util.Random
 
 class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Config, name: String) {
   Random.setSeed(1)
 
   def run(): STLState = {
-    val states = for (i <- 0 until conf.saConf.stateNum)
-      yield new SAState(firstState.createRandom(), server, conf, name + i)
+    var states = (for (i <- 0 until conf.saConf.stateNum)
+      yield new SAState(firstState.createRandom(), server, conf, name, i)).toList
     for (i <- 0 until conf.saConf.maxItr) {
-      states.foreach(state => state.moveToNextState())
+      val moveTask: Future[List[SAState]] = Future.traverse(states) { state =>
+        Future {
+          state.moveToNextState()
+        }
+      }
+      states = Await.result(moveTask, Duration.Inf)
+      println("Gen: " + i + ", scores: [" + states.map(state => state.score).mkString(" ") + "]")
     }
     val best = states.maxBy(state => state.bestScore)
     println("Best score: " + best.bestScore)
@@ -16,6 +25,6 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
 }
 
 object SimulatedAnnealing {
-  def apply(firstState: STLState, server: HspiceServer, conf: Config, id: String):
-  SimulatedAnnealing = new SimulatedAnnealing(firstState, server, conf, id)
+  def apply(firstState: STLState, server: HspiceServer, conf: Config, name: String):
+  SimulatedAnnealing = new SimulatedAnnealing(firstState, server, conf, name)
 }

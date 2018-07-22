@@ -13,7 +13,7 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
   (server.runSpiceFile _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val conf = new Config
   val state =
-    STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf)
+    STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf, 0)
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
   val hash = state.spFile.md5Hash
 
@@ -23,16 +23,15 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
   "calcScore()" should "return score of first state." in {
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
-      Paths.get("/dev/shm/" + hash + ".lis"))
+      Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
     assert(state.calcScore(server) === 0.8576430835973875)
   }
 
   "deleteFileByPrefix()" should "delete files by Prefix." in {
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
-      Paths.get("/dev/shm/" + hash + ".lis"))
-    val deleteFileByPrefix: PrivateMethod[Unit] = PrivateMethod[Unit]('deleteFileByPrefix)
-    state invokePrivate deleteFileByPrefix("/dev/shm/", hash)
+      Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
+    state.deleteFileByPrefix("/dev/shm/", hash)
     val spFile = new File("/dev/shm/" + hash + ".lis")
     assert(spFile.exists() === false)
     val lisFile = new File("/dev/shm/" + hash + ".sp")

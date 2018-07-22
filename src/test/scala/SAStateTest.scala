@@ -2,13 +2,13 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.{DiagrammedAssertions, FlatSpec}
 
 class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
-  val cmdr = stub[CommandRunner]
+  val cmdr: CommandRunner = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val conf = new Config()
-  val server = stub[MockableSPServer]
-  val saState = new SAState(new STLStateMock(), server, conf, "test")
+  val server: HspiceServer = stub[MockableSPServer]
+  val saState = new SAState(new STLStateMock(), server, conf, "test", 0)
 
-  class STLStateMock extends STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf) {
+  class STLStateMock extends STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf, 0) {
     override def calcScore(server: HspiceServer): Double = 1.0
 
     override def createNeighbour(): STLState = this
