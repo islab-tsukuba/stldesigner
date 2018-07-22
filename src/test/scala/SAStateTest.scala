@@ -1,6 +1,9 @@
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{DiagrammedAssertions, FlatSpec}
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr: CommandRunner = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
@@ -19,8 +22,9 @@ class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   class MockableSPServer extends HspiceServer(cmdr, conf)
 
   "moveToNextState()" should "change state." in {
-    saState.moveToNextState()
-    assert(saState.generation === 2)
+    val future = saState.moveToNextState()
+    val newState = Await.result(future, Duration.Inf)
+    assert(newState.generation === 2)
   }
 
   "probability()" should "return one if e1 is grater than e2" in {

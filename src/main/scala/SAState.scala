@@ -1,5 +1,7 @@
 import java.io.File
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Random
 
 class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: String, id: Int) {
@@ -10,24 +12,27 @@ class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: St
   var bestScore = score
   var generation = 1
 
-  def moveToNextState(): SAState = {
+  def moveToNextState(): Future[SAState] = {
+    println("Create next STLState " + id + ".")
     val nextState = state.createNeighbour()
-    val nextScore = nextState.calcScore(server)
-    if (nextScore < bestScore) {
-      bestState = nextState
-      bestScore = nextScore
-      val dirPath = "./output/" + name + id + "/"
-      val dir = new File(dirPath)
-      if (!dir.exists()) dir.mkdir()
-      bestState.spFile.writeToFile(dirPath + "gen" + generation + ".sp")
+    Future {
+      val nextScore = nextState.calcScore(server)
+      if (nextScore < bestScore) {
+        bestState = nextState
+        bestScore = nextScore
+        val dirPath = "./output/" + name + id + "/"
+        val dir = new File(dirPath)
+        if (!dir.exists()) dir.mkdir()
+        bestState.spFile.writeToFile(dirPath + "gen" + generation + ".sp")
+      }
+      val prob = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
+      if (Random.nextDouble() <= prob) {
+        state = nextState
+        score = nextScore
+      }
+      generation += 1
+      this
     }
-    val prob = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
-    if (Random.nextDouble() <= prob) {
-      state = nextState
-      score = nextScore
-    }
-    generation += 1
-    this
   }
 
   def calcProbability(e1: Double, e2: Double, progress: Double): Double = {

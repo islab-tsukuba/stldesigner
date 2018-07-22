@@ -10,10 +10,8 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
     var states = (for (i <- 0 until conf.saConf.stateNum)
       yield new SAState(firstState.createRandom(), server, conf, name, i)).toList
     for (i <- 0 until conf.saConf.maxItr) {
-      val moveTask: Future[List[SAState]] = Future.traverse(states) { state =>
-        Future {
-          state.moveToNextState()
-        }
+      val moveTask: Future[List[SAState]] = Future.sequence {
+        states.map(state => state.moveToNextState())
       }
       states = Await.result(moveTask, Duration.Inf)
       println("Gen: " + i + ", scores: [" + states.map(state => state.score).mkString(" ") + "]")
