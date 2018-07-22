@@ -20,7 +20,7 @@ class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: St
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
-        val dirPath = "./output/" + name + id + "/"
+        val dirPath = "./output/" + name + "_" + id + "/"
         val dir = new File(dirPath)
         if (!dir.exists()) dir.mkdir()
         bestState.spFile.writeToFile(dirPath + "gen" + generation + ".sp")
