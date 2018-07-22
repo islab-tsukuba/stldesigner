@@ -7,7 +7,8 @@ import scala.util.Random
 class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: String, id: Int) {
   var state = firstState
   state.id = id
-  var score = state.calcScore(server)
+  var score = 1.0
+  var firstScore = state.calcScore(server)
   var bestState = state
   var bestScore = score
   var generation = 1
@@ -15,7 +16,7 @@ class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: St
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
     Future {
-      val nextScore = nextState.calcScore(server)
+      val nextScore = nextState.calcScore(server) / firstScore
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
