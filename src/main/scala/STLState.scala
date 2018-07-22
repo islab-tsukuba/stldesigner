@@ -1,6 +1,6 @@
 import java.io.{File, FilenameFilter}
 
-case class STLState(spFile: SPFile, conf: Config, var id: Int) {
+case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
 
@@ -40,19 +40,23 @@ case class STLState(spFile: SPFile, conf: Config, var id: Int) {
   private def shiftSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.getNeighbour())
-    spFile.setSTLElements(newStlElements)
+    val newSPFile = spFile.copy()
+    newSPFile.setSTLElements(newStlElements)
+    spFile = newSPFile
     this
   }
 
   def createRandom(): STLState = {
-    val newState = this.copy()
+    val newState = this.copy(spFile = spFile.copy())
     newState.assignRandomSegment()
   }
 
   def assignRandomSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
-    spFile.setSTLElements(newStlElements)
+    val newSPFile = spFile.copy()
+    newSPFile.setSTLElements(newStlElements)
+    spFile = newSPFile
     this
   }
 }
