@@ -33,7 +33,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   }
 
   def createNeighbour(): STLState = {
-    val newState = this.copy()
+    val newState = this.copy(spFile = spFile.copy())
     newState.shiftSegment()
   }
 
