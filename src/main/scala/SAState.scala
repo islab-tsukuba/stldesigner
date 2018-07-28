@@ -4,11 +4,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
 
-class SAState(firstState: STLState, server: HspiceServer, conf: Config, name: String, id: Int) {
-  var state = firstState
+class SAState(initState: STLState, server: HspiceServer, firstScore: Double, conf: Config, name: String, id: Int) {
+  var state = initState
   state.id = id
-  var score = 1.0
-  var firstScore = state.calcScore(server)
+  var score = initState.calcScore(server) / firstScore
   var bestState = state
   var bestScore = score
   var generation = 1

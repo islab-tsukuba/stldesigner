@@ -7,8 +7,22 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
   Random.setSeed(1)
 
   def run(): STLState = {
-    var states = (for (i <- 0 until conf.saConf.stateNum)
-      yield new SAState(firstState.createNeighbour(), server, conf, conf.name, i + 1)).toList
+    val firstScore = firstState.calcScore(server)
+    val initTasks: Future[List[SAState]] = Future.sequence {
+      (for (i <- 0 until conf.saConf.initNum)
+        yield {
+          val randState = firstState.createRandom()
+          Future {
+            new SAState(randState, server, firstScore, conf, conf.name, i + 1)
+          }
+        }).toList
+    }
+    var states = Await.result(initTasks, Duration.Inf)
+    states = states.sortBy(state => state.score).slice(0, conf.saConf.stateNum)
+    println("Gen: 0"
+      + "\nScores: [" + states.map(state => state.score).mkString(" ") + "]"
+      + "\nBest Scores: [" + states.map(state => state.bestScore).mkString(" ") + "]"
+      + "\nProbavility: [" + states.map(state => state.probability).mkString(" ") + "]")
     for (i <- 0 until conf.saConf.maxItr) {
       val moveTask: Future[List[SAState]] = Future.sequence {
         states.map(state => state.moveToNextState())
