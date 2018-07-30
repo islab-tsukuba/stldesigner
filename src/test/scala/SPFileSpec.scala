@@ -14,7 +14,7 @@ class SPFileSpec extends FlatSpec with DiagrammedAssertions {
       "W3_STL_5        optpt2  0       optpt3  0       RLGCMODEL=Z50   N=1     L=150m"
     )
     )
-    assert(elements.map(element => element.index) === List(14, 17, 20))
+    assert(elements.map(element => element.index) === List(15, 18, 21))
   }
 
   "setSTLElements()" should "sets STL element." in {
@@ -30,10 +30,10 @@ class SPFileSpec extends FlatSpec with DiagrammedAssertions {
   }
 
   "getTran()" should "return trun command of spice file." in {
-    assert(spFile.getTran === Tran(".TRAN 10p 24n 20n"))
+    assert(spFile.getTran === Tran(".TRAN 5p 100n 0n"))
   }
 
   "md5Hash()" should "return md5 hash string." in {
-    assert(spFile.md5Hash === "d5c2646298f23d28706c63eee0ccf549")
+    assert(spFile.md5Hash === "2f4b6d0e3298229dc640309e7cda45cf")
   }
 }
