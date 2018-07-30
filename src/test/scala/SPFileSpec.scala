@@ -30,10 +30,10 @@ class SPFileSpec extends FlatSpec with DiagrammedAssertions {
   }
 
   "getTran()" should "return trun command of spice file." in {
-    assert(spFile.getTran === Tran(".TRAN 5p 100n 0n"))
+    assert(spFile.getTran === Tran(".TRAN 5p 40n 0n"))
   }
 
   "md5Hash()" should "return md5 hash string." in {
-    assert(spFile.md5Hash === "2f4b6d0e3298229dc640309e7cda45cf")
+    assert(spFile.md5Hash === "499ca8539868c2e13582b709f7f0b807")
   }
 }

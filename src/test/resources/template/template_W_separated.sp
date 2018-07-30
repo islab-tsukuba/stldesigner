@@ -60,7 +60,7 @@ RTvs1          vspt3   0       50
 *** Netlist Commands *** --------------------------------------------*
 
 .WIDTH OUT=132
-.TRAN 5p 100n 0n
+.TRAN 5p 40n 0n
 .PRINT v(optpt1) v(optpt2) v(optpt3) v(vspt1) v(vspt2) v(vspt3)
 
 

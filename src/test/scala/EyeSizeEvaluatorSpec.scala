@@ -6,12 +6,12 @@ class EyeSizeEvaluatorSpec extends FlatSpec with DiagrammedAssertions with Priva
   val eyeSizeEvaluator = new EyeSizeEvaluator(new Config(), Tran(".TRAN 5p 100n 0n"))
 
   "evaluate()" should "return signal score." in {
-    assert(eyeSizeEvaluator.evaluate(lisFile) === 2.60067719787752)
+    assert(eyeSizeEvaluator.evaluate(lisFile) === 2.414282538376363)
   }
 
   "calcSinglePoint()" should "return single point signal score." in {
     val calcSinglePoint: PrivateMethod[Double] = PrivateMethod[Double]('calcSinglePoint)
     val score = eyeSizeEvaluator invokePrivate calcSinglePoint(lisFile.getVoltage("optpt3"))
-    assert(score === 2.60067719787752)
+    assert(score === 2.414282538376363)
   }
 }
