@@ -24,7 +24,7 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
-    assert(state.calcScore(server) === 0.8383256323343539)
+    assert(state.calcScore(server) === 2.60067719787752)
   }
 
   "deleteFileByPrefix()" should "delete files by Prefix." in {
