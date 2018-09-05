@@ -2,6 +2,8 @@ import scala.collection.mutable
 import scala.util.Random
 
 trait Element {
+  def deepCopy(): Element
+
   def getString(): String
 
   def shift(): Element
@@ -11,6 +13,10 @@ trait Element {
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
                     conf: Config) extends Element {
+  override def deepCopy(): Element = {
+    this.copy(nodes = nodes.clone(), values = values.clone())
+  }
+
   override def getString(): String = {
     name + " " + nodes.mkString(" ") + " " +
       values.map {

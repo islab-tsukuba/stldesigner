@@ -21,11 +21,17 @@ case class SPFile(path: String, config: Config) {
     }
   }
 
-  def getSTLElements(): List[STLElement] = stlElements
+  def deepCopy(): SPFile = {
+    val copy = this.copy()
+    copy.setSTLElements(stlElements.map(stlElement => stlElement.deepCopy()))
+    copy
+  }
 
   def setSTLElements(elements: List[STLElement]): Unit = {
     stlElements = elements
   }
+
+  def getSTLElements(): List[STLElement] = stlElements
 
   def writeToFile(path: String): Unit = {
     val writer = new PrintWriter(new File(path))

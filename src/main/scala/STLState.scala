@@ -33,30 +33,26 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   }
 
   def createNeighbour(): STLState = {
-    val newState = this.copy(spFile = spFile.copy())
+    val newState = this.copy(spFile = spFile.deepCopy())
     newState.shiftSegment()
   }
 
   private def shiftSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.getNeighbour())
-    val newSPFile = spFile.copy()
-    newSPFile.setSTLElements(newStlElements)
-    spFile = newSPFile
+    spFile.setSTLElements(newStlElements)
     this
   }
 
   def createRandom(): STLState = {
-    val newState = this.copy(spFile = spFile.copy())
+    val newState = this.copy(spFile = spFile.deepCopy())
     newState.assignRandomSegment()
   }
 
   def assignRandomSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
-    val newSPFile = spFile.copy()
-    newSPFile.setSTLElements(newStlElements)
-    spFile = newSPFile
+    spFile.setSTLElements(newStlElements)
     this
   }
 }

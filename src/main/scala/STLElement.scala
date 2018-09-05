@@ -4,6 +4,8 @@ trait STLElement {
   val line: String
   val index: Int
 
+  def deepCopy(): STLElement
+
   def getNeighbour(): STLElement
 
   def assignRandom(): STLElement
@@ -27,6 +29,12 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
   // Use LinkedHashMap to keep order of values.
   val values: mutable.LinkedHashMap[String, String] = createValueMap()
   var elements: Seq[Element] = createElements()
+
+  override def deepCopy(): STLElement = {
+    val copy = this.copy()
+    copy.elements = elements.map(element => element.deepCopy())
+    copy
+  }
 
   override def getNeighbour(): STLElement = {
     val newSTLElement = this.copy()
