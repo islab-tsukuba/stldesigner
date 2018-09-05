@@ -9,16 +9,15 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
   def run(): STLState = {
     val firstScore = firstState.calcScore(server)
     val initTasks: Future[List[SAState]] = Future.sequence {
-      (for (i <- 0 until conf.saConf.initNum)
+      (for (i <- 0 until conf.saConf.stateNum)
         yield {
-          val randState = firstState.createRandom()
+          val initState = firstState.createNeighbour()
           Future {
-            new SAState(randState, server, firstScore, conf, conf.name, i + 1)
+            new SAState(initState, server, firstScore, conf, conf.name, i + 1)
           }
         }).toList
     }
     var states = Await.result(initTasks, Duration.Inf)
-    states = states.sortBy(state => state.score).slice(0, conf.saConf.stateNum)
     println("Gen: 0"
       + "\nScores: [" + states.map(state => state.score).mkString(" ") + "]"
       + "\nBest Scores: [" + states.map(state => state.bestScore).mkString(" ") + "]"

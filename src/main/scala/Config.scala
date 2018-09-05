@@ -9,7 +9,7 @@ class Config {
   var optimizeWeight = Map("optpt3" -> 1.0)
   var eyeTime = 2e-9
   var eyeWidthMargin = 0.2
-  var saConf = SimulatedAnnealingConfig(100, 0.01, 8, 100)
+  var saConf = SimulatedAnnealingConfig(100, 0.01, 8)
   var name = "eye_size_multi_thread"
 
   def fromFile(path: String): Unit = {
@@ -18,5 +18,4 @@ class Config {
 
 case class SimulatedAnnealingConfig(var maxItr: Int,
                                     var targetTemp: Double,
-                                    var stateNum: Int,
-                                    var initNum: Int)
+                                    var stateNum: Int)
