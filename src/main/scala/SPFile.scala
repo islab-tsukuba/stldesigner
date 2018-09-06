@@ -33,8 +33,8 @@ case class SPFile(path: String, config: Config) {
 
   def getSTLElements(): List[STLElement] = stlElements
 
-  def writeToFile(path: String): Unit = {
-    val writer = new PrintWriter(new File(path))
+  def writeToFile(file: File): Unit = {
+    val writer = new PrintWriter(file)
     writer.write(getString())
     writer.close()
   }

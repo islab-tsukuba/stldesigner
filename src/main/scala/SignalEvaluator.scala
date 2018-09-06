@@ -1,12 +1,16 @@
+import java.io.{File, PrintWriter}
+
 import scala.collection.mutable
 import scala.util.control.Breaks
 
 trait SignalEvaluator {
-  def evaluate(lisFile: LisFile): Double
+  def evaluate(): Double
 }
 
-class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
-  override def evaluate(lisFile: LisFile): Double = {
+class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends SignalEvaluator {
+  val eyeSize = (conf.eyeTime / tran.resolution).toInt
+
+  override def evaluate(): Double = {
     var score = 0.0
     for ((k, v) <- conf.optimizeWeight) {
       val vList = lisFile.getVoltage(k)
@@ -17,35 +21,7 @@ class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
   }
 
   private def calcSinglePoint(vList: Seq[Double]): Double = {
-    val eyeSize = (conf.eyeTime / tran.resolution).toInt
-    var eyeDiagram = Seq.fill(4)(mutable.Seq.fill(eyeSize)(0.0))
-    val maxVolts = mutable.Seq.fill(eyeSize)(0.0)
-
-    // Create virtual eye diagram.
-    for (i <- 0 until vList.size) {
-      val eyePos = i % eyeSize
-      if (vList(i) > 0.0) {
-        eyeDiagram(0)(eyePos) += vList(i)
-      } else {
-        eyeDiagram(3)(eyePos) += vList(i)
-      }
-      if (vList(i) > maxVolts(eyePos)) {
-        maxVolts(eyePos) = vList(i)
-      }
-    }
-    var maxVolt = 0.0
-    var eyeStart = 0
-    for (i <- 0 until eyeSize) {
-      eyeDiagram(1)(i) = eyeDiagram(0)(i) - maxVolts(i)
-      eyeDiagram(2)(i) = eyeDiagram(3)(i) + maxVolts(i)
-      if (maxVolt < eyeDiagram(1)(i)) {
-        maxVolt = eyeDiagram(1)(i)
-        eyeStart = i
-      }
-    }
-
-    // Shift eye diagram.
-    eyeDiagram = eyeDiagram.map(valts => valts.drop(eyeStart) ++ valts.take(eyeStart))
+    val eyeDiagram = getEyeLines(vList)
 
     // Calc eye height.
     val heightRangeStart = (eyeSize * conf.eyeWidthMargin).toInt
@@ -95,5 +71,52 @@ class EyeSizeEvaluator(conf: Config, tran: Tran) extends SignalEvaluator {
       return Double.MaxValue
     }
     1.0 / (eyeHeight + eyeWidth)
+  }
+
+  private def getEyeLines(vList: Seq[Double]): Seq[Seq[Double]] = {
+    val eyeDiagram = Seq.fill(4)(mutable.Seq.fill(eyeSize)(0.0))
+    val maxVolts = mutable.Seq.fill(eyeSize)(0.0)
+
+    // Create virtual eye diagram.
+    for (i <- 0 until vList.size) {
+      val eyePos = i % eyeSize
+      if (vList(i) > 0.0) {
+        eyeDiagram(0)(eyePos) += vList(i)
+      } else {
+        eyeDiagram(3)(eyePos) += vList(i)
+      }
+      if (vList(i) > maxVolts(eyePos)) {
+        maxVolts(eyePos) = vList(i)
+      }
+    }
+    var maxVolt = 0.0
+    var eyeStart = 0
+    for (i <- 0 until eyeSize) {
+      eyeDiagram(1)(i) = eyeDiagram(0)(i) - maxVolts(i)
+      eyeDiagram(2)(i) = eyeDiagram(3)(i) + maxVolts(i)
+      if (maxVolt < eyeDiagram(1)(i)) {
+        maxVolt = eyeDiagram(1)(i)
+        eyeStart = i
+      }
+    }
+
+    // Shift eye diagram.
+    eyeDiagram.map(valts => valts.drop(eyeStart) ++ valts.take(eyeStart))
+  }
+
+  def writeEyeToFile(dirPath: String, fileName: String): Unit = {
+    for ((k, v) <- conf.optimizeWeight) {
+      val lisFilePath = new File(dirPath, fileName + "_" + k + ".dat")
+      val writer = new PrintWriter(lisFilePath)
+      val eyeDiagram = getEyeLines(lisFile.getVoltage(k))
+      writer.write("v1\tv2\tv3\tv4\n")
+      for (i <- 0 until eyeSize) {
+        writer.write(eyeDiagram(0)(i) + "\t" +
+          eyeDiagram(1)(i) + "\t" +
+          eyeDiagram(2)(i) + "\t" +
+          eyeDiagram(3)(i) + "\n")
+      }
+      writer.close()
+    }
   }
 }

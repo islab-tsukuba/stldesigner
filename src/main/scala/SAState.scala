@@ -1,5 +1,3 @@
-import java.io.File
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
@@ -21,9 +19,7 @@ class SAState(initState: STLState, server: HspiceServer, firstScore: Double, con
         bestState = nextState
         bestScore = nextScore
         val dirPath = "./output/" + name + "_" + id + "/"
-        val dir = new File(dirPath)
-        if (!dir.exists()) dir.mkdir()
-        bestState.spFile.writeToFile(dirPath + "gen" + generation + ".sp")
+        bestState.writeData(dirPath, "gen" + generation)
       }
       probability = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
       if (Random.nextDouble() <= probability) {

@@ -3,6 +3,7 @@ import java.io.{File, FilenameFilter}
 case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
+  var evaluator: EyeSizeEvaluator = null
 
   def calcScore(server: HspiceServer): Double = {
     if (score != Double.MaxValue) {
@@ -10,13 +11,13 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     }
     val hash = spFile.md5Hash
     val outputName = hash + "_" + id
-    val spFilePath = dirPath + outputName + ".sp"
-    val lisFilePath = dirPath + outputName + ".lis"
+    val spFilePath = new File(dirPath, outputName + ".sp")
+    val lisFilePath = new File(dirPath, outputName + ".lis")
     spFile.writeToFile(spFilePath)
-    server.runSpiceFile(spFilePath)
-    val lisFile = LisFile(lisFilePath, conf)
-    val evaluator = new EyeSizeEvaluator(new Config(), spFile.getTran())
-    score = evaluator.evaluate(lisFile)
+    server.runSpiceFile(spFilePath.getPath)
+    val lisFile = LisFile(lisFilePath.getPath, conf)
+    evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
+    score = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     score
   }
@@ -54,5 +55,16 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
     spFile.setSTLElements(newStlElements)
     this
+  }
+
+  def writeData(dirPath: String, fileName: String): Unit = {
+    if (evaluator == null) {
+      throw new Exception("Evaluator is not created. You should run calcScore Function.")
+    }
+    val dir = new File(dirPath)
+    if (!dir.exists()) dir.mkdir()
+    val spFilePath = new File(dirPath, fileName + ".sp")
+    spFile.writeToFile(spFilePath)
+    evaluator.writeEyeToFile(dirPath, fileName)
   }
 }
