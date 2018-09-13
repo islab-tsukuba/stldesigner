@@ -106,12 +106,13 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
 
   def writeEyeToFile(dirPath: String, fileName: String): Unit = {
     for ((k, v) <- conf.optimizeWeight) {
-      val lisFilePath = new File(dirPath, fileName + "_" + k + ".dat")
+      val lisFilePath = new File(dirPath, fileName + "_" + k + ".eye")
       val writer = new PrintWriter(lisFilePath)
       val eyeDiagram = getEyeLines(lisFile.getVoltage(k))
-      writer.write("v1\tv2\tv3\tv4\n")
+      writer.write("t\tv1\tv2\tv3\tv4\n")
       for (i <- 0 until eyeSize) {
-        writer.write(eyeDiagram(0)(i) + "\t" +
+        writer.write(i * tran.resolution + "\t" +
+          eyeDiagram(0)(i) + "\t" +
           eyeDiagram(1)(i) + "\t" +
           eyeDiagram(2)(i) + "\t" +
           eyeDiagram(3)(i) + "\n")
