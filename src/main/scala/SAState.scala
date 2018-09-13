@@ -2,10 +2,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
 
-class SAState(initState: STLState, server: HspiceServer, firstScore: Double, conf: Config, name: String, id: Int) {
+class SAState(initState: STLState, server: HspiceServer, conf: Config, name: String, id: Int) {
   var state = initState
   state.id = id
-  var score = initState.calcScore(server) / firstScore
+  var score = initState.calcScore(server)
   var bestState = state
   var bestScore = score
   var generation = 1
@@ -14,7 +14,7 @@ class SAState(initState: STLState, server: HspiceServer, firstScore: Double, con
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
     Future {
-      val nextScore = nextState.calcScore(server) / firstScore
+      val nextScore = nextState.calcScore(server)
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore

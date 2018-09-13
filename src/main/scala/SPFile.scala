@@ -50,6 +50,12 @@ case class SPFile(path: String, config: Config) {
     }.mkString("\n")
   }
 
+  def writeFirstToFile(file: File): Unit = {
+    val writer = new PrintWriter(file)
+    writer.write(firstSPFileContent.mkString("\n"))
+    writer.close()
+  }
+
   def getTran(): Tran = {
     val tranLine = firstSPFileContent.filter(line => line.matches("""^\.TRAN.*""")).head
     Tran(tranLine)

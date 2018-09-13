@@ -4,10 +4,14 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
   var evaluator: EyeSizeEvaluator = null
+  var firstScore: Double = Double.MaxValue
 
   def calcScore(server: HspiceServer): Double = {
-    if (score != Double.MaxValue) {
-      return score
+    if (score != Double.MaxValue && firstScore != Double.MaxValue) {
+      return score / firstScore
+    }
+    if (firstScore == Double.MaxValue) {
+      firstScore = calcFirstScore(server)
     }
     val hash = spFile.md5Hash
     val outputName = hash + "_" + id
@@ -19,7 +23,20 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
     score = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
-    score
+    score / firstScore
+  }
+
+  private def calcFirstScore(server: HspiceServer): Double = {
+    val outputName = "first"
+    val spFilePath = new File(dirPath, outputName + ".sp")
+    val lisFilePath = new File(dirPath, outputName + ".lis")
+    spFile.writeFirstToFile(spFilePath)
+    server.runSpiceFile(spFilePath.getPath)
+    val lisFile = LisFile(lisFilePath.getPath, conf)
+    val evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
+    val firstScore = evaluator.evaluate()
+    deleteFileByPrefix(dirPath, outputName)
+    firstScore
   }
 
   def deleteFileByPrefix(path: String, prefix: String): Unit = {
