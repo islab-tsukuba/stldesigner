@@ -11,7 +11,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
       return score / firstScore
     }
     if (firstScore == Double.MaxValue) {
-      firstScore = calcFirstScore(server)
+      throw new Exception("FirstScore is not calculated. You should run calcFirstScore Function.")
     }
     val hash = spFile.md5Hash
     val outputName = hash + "_" + id
@@ -24,19 +24,6 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     score = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     score / firstScore
-  }
-
-  private def calcFirstScore(server: HspiceServer): Double = {
-    val outputName = "first"
-    val spFilePath = new File(dirPath, outputName + ".sp")
-    val lisFilePath = new File(dirPath, outputName + ".lis")
-    spFile.writeFirstToFile(spFilePath)
-    server.runSpiceFile(spFilePath.getPath)
-    val lisFile = LisFile(lisFilePath.getPath, conf)
-    val evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
-    val firstScore = evaluator.evaluate()
-    deleteFileByPrefix(dirPath, outputName)
-    firstScore
   }
 
   def deleteFileByPrefix(path: String, prefix: String): Unit = {
@@ -83,5 +70,18 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     val spFilePath = new File(dirPath, fileName + ".sp")
     spFile.writeToFile(spFilePath)
     evaluator.writeEyeToFile(dirPath, fileName)
+  }
+
+  def calcFirstScore(server: HspiceServer): Double = {
+    val outputName = "first"
+    val spFilePath = new File(dirPath, outputName + ".sp")
+    val lisFilePath = new File(dirPath, outputName + ".lis")
+    spFile.writeFirstToFile(spFilePath)
+    server.runSpiceFile(spFilePath.getPath)
+    val lisFile = LisFile(lisFilePath.getPath, conf)
+    val evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
+    firstScore = evaluator.evaluate()
+    deleteFileByPrefix(dirPath, outputName)
+    firstScore
   }
 }

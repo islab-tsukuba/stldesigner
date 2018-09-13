@@ -13,6 +13,8 @@ class SimulatedAnnealingSpec extends FlatSpec with DiagrammedAssertions with Moc
   class STLStateMock extends STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf, 0) {
     override def calcScore(server: HspiceServer): Double = 1.0
 
+    override def calcFirstScore(server: HspiceServer): Double = 1.0
+
     override def createNeighbour(): STLState = this
 
     override def createRandom(): STLState = this

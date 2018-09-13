@@ -24,15 +24,15 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/first.lis"))
-    val calcFirstScore: PrivateMethod[Double] = PrivateMethod[Double]('calcFirstScore)
-    val score = state invokePrivate calcFirstScore(server)
-    assert(score === 2.414282538376363)
+    val firstScore = state.calcFirstScore(server)
+    assert(firstScore === 2.414282538376363)
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/first.lis"))
-    assert(state.calcScore(server) === 1.0)
+    val score = state.calcScore(server)
+    assert(score === 1.0)
   }
 
   "deleteFileByPrefix()" should "delete files by Prefix." in {

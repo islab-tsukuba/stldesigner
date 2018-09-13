@@ -7,6 +7,7 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
   Random.setSeed(1)
 
   def run(): STLState = {
+    firstState.calcFirstScore(server)
     val initTasks: Future[List[SAState]] = Future.sequence {
       (for (i <- 0 until conf.saConf.stateNum)
         yield {
