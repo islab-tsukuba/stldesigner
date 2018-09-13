@@ -39,6 +39,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
 
   def createNeighbour(): STLState = {
     val newState = this.copy(spFile = spFile.deepCopy())
+    newState.firstScore = firstScore
     newState.shiftSegment()
   }
 
@@ -51,6 +52,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
 
   def createRandom(): STLState = {
     val newState = this.copy(spFile = spFile.deepCopy())
+    newState.firstScore = firstScore
     newState.assignRandomSegment()
   }
 
