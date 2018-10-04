@@ -43,7 +43,7 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
       convexPoint = eyeUnder.zipWithIndex.slice(heightRangeStart, heightRangeEnd).min._2
     }
     // Get eye height from sub of convex point.
-    val eyeHeight = eyeUpper(convexPoint) - eyeUnder(convexPoint)
+    var eyeHeight = eyeUpper(convexPoint) - eyeUnder(convexPoint)
 
     // Calc eye width.
     var eyeWidthStart = 0
@@ -67,8 +67,11 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
     }
     val eyeWidth = (eyeWidthEnd - eyeWidthStart) * tran.resolution / conf.eyeTime
 
-    if ((eyeHeight + eyeWidth) <= 0) {
+    if (eyeWidth <= 0) {
       return Double.MaxValue
+    }
+    if (eyeHeight <= 0) {
+      eyeHeight = 0
     }
     1.0 / (eyeHeight + eyeWidth)
   }
