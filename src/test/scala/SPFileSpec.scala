@@ -3,7 +3,7 @@ import org.scalatest._
 import scala.io.Source
 
 class SPFileSpec extends FlatSpec with DiagrammedAssertions {
-  val conf = new Config()
+  val conf = Config()
   val spFile = SPFile("./src/test/resources/template/template_W.sp", conf)
 
   "getFirstSTLElements()" should "return STL element." in {

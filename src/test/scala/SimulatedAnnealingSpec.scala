@@ -4,7 +4,7 @@ import org.scalatest._
 class SimulatedAnnealingSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = new Config()
+  val conf = Config()
   conf.saConf.maxItr = 10
   val server = stub[MockableSPServer]
   val stlState = new STLStateMock()

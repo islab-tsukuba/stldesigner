@@ -7,7 +7,7 @@ import scala.concurrent.duration.Duration
 class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr: CommandRunner = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = new Config()
+  val conf = Config()
   val server: HspiceServer = stub[MockableSPServer]
   val saState = new SAState(new STLStateMock(), server, conf, "test", 0)
 

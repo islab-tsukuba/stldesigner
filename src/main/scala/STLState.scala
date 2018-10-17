@@ -20,7 +20,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     spFile.writeToFile(spFilePath)
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
-    evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
+    evaluator = new EyeSizeEvaluator(lisFile, Config(), spFile.getTran())
     score = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     score / firstScore
@@ -81,7 +81,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     spFile.writeFirstToFile(spFilePath)
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
-    val evaluator = new EyeSizeEvaluator(lisFile, new Config(), spFile.getTran())
+    val evaluator = new EyeSizeEvaluator(lisFile, Config(), spFile.getTran())
     firstScore = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     firstScore

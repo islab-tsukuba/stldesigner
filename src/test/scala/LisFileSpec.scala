@@ -2,7 +2,7 @@ import org.scalatest._
 
 class LisFileSpec extends FlatSpec with DiagrammedAssertions {
   val lisFile = new LisFile(
-    "./src/test/resources/output/template_W.lis", new Config())
+    "./src/test/resources/output/template_W.lis", Config())
   "getDataLines" should "return all voltage data." in {
     assert(lisFile.getDataLines().length === 8003)
   }
