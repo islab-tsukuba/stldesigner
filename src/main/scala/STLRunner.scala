@@ -10,7 +10,7 @@ object STLRunner {
       println("Close servers.")
       server.close()
     } else {
-      println("Invalid args. Format: sbt run [config path]")
+      println("Invalid args. Format: sbt \"run [config path]\"")
     }
   }
 }
