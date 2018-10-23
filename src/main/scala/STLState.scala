@@ -26,17 +26,6 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     score / firstScore
   }
 
-  def deleteFileByPrefix(path: String, prefix: String): Unit = {
-    val dir = new File(path)
-    val files = dir.listFiles(
-      new FilenameFilter() {
-        def accept(dir: File, name: String): Boolean = name.matches(prefix + ".*")
-      })
-    files.foreach(file => {
-      file.delete()
-    })
-  }
-
   def createNeighbour(): STLState = {
     val newState = this.copy(spFile = spFile.deepCopy())
     newState.firstScore = firstScore
@@ -63,15 +52,11 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     this
   }
 
-  def writeData(dirPath: String, fileName: String): Unit = {
+  def writeData(logger: StateLogger, gen: Int, score: Double): Unit = {
     if (evaluator == null) {
       throw new Exception("Evaluator is not created. You should run calcScore Function.")
     }
-    val dir = new File(dirPath)
-    if (!dir.exists()) dir.mkdir()
-    val spFilePath = new File(dirPath, fileName + ".sp")
-    spFile.writeToFile(spFilePath)
-    evaluator.writeEyeToFile(dirPath, fileName)
+    logger.writeData(spFile, evaluator, gen, score)
   }
 
   def calcFirstScore(server: HspiceServer): Double = {
@@ -85,5 +70,16 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     firstScore = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     firstScore
+  }
+
+  def deleteFileByPrefix(path: String, prefix: String): Unit = {
+    val dir = new File(path)
+    val files = dir.listFiles(
+      new FilenameFilter() {
+        def accept(dir: File, name: String): Boolean = name.matches(prefix + ".*")
+      })
+    files.foreach(file => {
+      file.delete()
+    })
   }
 }

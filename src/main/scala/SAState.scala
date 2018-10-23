@@ -10,6 +10,7 @@ class SAState(initState: STLState, server: HspiceServer, conf: Config, name: Str
   var bestScore = score
   var generation = 1
   var probability = 0.0
+  var logger = StateLogger("./output/" + name + "_" + id + "/")
 
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
@@ -18,8 +19,7 @@ class SAState(initState: STLState, server: HspiceServer, conf: Config, name: Str
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
-        val dirPath = "./output/" + name + "_" + id + "/"
-        bestState.writeData(dirPath, "gen" + generation)
+        bestState.writeData(logger, generation, bestScore)
       }
       probability = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
       if (Random.nextDouble() <= probability) {
