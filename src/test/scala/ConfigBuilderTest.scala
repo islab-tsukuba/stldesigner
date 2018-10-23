@@ -17,7 +17,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
     assert(default.eyeTime === 2e-9)
     assert(default.eyeWidthMargin === 0.2)
     assert(default.saConf === SimulatedAnnealingConfig(4000, 0.01, 8))
-    assert(default.spFilePath === "./data/template/template_W_akt_isolation_light.sp")
+    assert(default.spFilePath === "./data/template/template_W.sp")
   }
 
   "ConfigBuilder.getFromYAML()" should "return yaml config." in {

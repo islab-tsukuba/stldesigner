@@ -1,4 +1,4 @@
-﻿******************** STL ver 2.3 T element basic model ********************
+******************** STL ver 2.3 T element basic model ********************
 
 *** Notice *** ------------------------------------------------------*
 * WエレメントによるSTL基本形（バス配線で寄生容量接続有り）のテンプレート
@@ -8,16 +8,17 @@
 
 *** STL Circuit *** -------------------------------------------------*
 
-Vs1             101     0       PULSE( 0 2 1n 200p 200p 1.8n 4n )
+Vs1             101     0       PWL(
+.INCLUDE ./data/input_data/250mhz-isolation )
 Rin1            101     102     50
 
 *** Subspaces ***
 W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m
-L1              optpt1  103     10n
-C1              103     0       10p
+L1              optpt1  103	10n
+C1              103	0	10p
 W2_STL_5        optpt1  0       optpt2  0       RLGCMODEL=Z50   N=1     L=350m
-L2              optpt2  104     10n
-C2              104     0       10p
+L2              optpt2  104	10n
+C2              104	0       10p
 W3_STL_5        optpt2  0       optpt3  0       RLGCMODEL=Z50   N=1     L=150m
 *****************
 
@@ -28,7 +29,8 @@ RT1             optpt3  0       50
 
 *** Versus Circuit *** ----------------------------------------------*
 
-Vsvs1          1001    0       PULSE( 0 2 1n 200p 200p 1.8n 4n )
+Vsvs1          1001    0       PWL(
+.INCLUDE ./data/input_data/250mhz-isolation )
 Rinvs1         1001    1002    50
 Tvs1           1002    0       vspt1   0       z0=50   TD=630.8p
 Tvs2           vspt1   0       vspt2   0       z0=50   TD=2207.8p
@@ -46,7 +48,7 @@ RTvs1          vspt3   0       50
 *** Netlist Commands *** --------------------------------------------*
 
 .WIDTH OUT=132
-.TRAN 10p 24n 20n
+.TRAN 5p 100n 0n
 .PRINT v(optpt1) v(optpt2) v(optpt3) v(vspt1) v(vspt2) v(vspt3)
 
 

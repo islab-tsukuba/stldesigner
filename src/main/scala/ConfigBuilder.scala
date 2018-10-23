@@ -19,7 +19,7 @@ class ConfigBuilder {
       2e-9,
       0.2,
       SimulatedAnnealingConfig(4000, 0.01, 8),
-      "./data/template/template_W_akt_isolation_light.sp")
+      "./data/template/template_W.sp")
   }
 
   def getFromYAML(path: String): Config = {
