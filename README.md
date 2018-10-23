@@ -17,7 +17,7 @@ $ mvn test
 
 Optimize STL.
 ```
-$ mvn run
+$ mvn "run ./data/config/default.yml"
 
 ```
 
