@@ -4,13 +4,13 @@ import org.scalatest._
 class SimulatedAnnealingSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = Config()
+  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   conf.saConf.maxItr = 10
   val server = stub[MockableSPServer]
   val stlState = new STLStateMock()
   val sa = SimulatedAnnealing(stlState, server, conf)
 
-  class STLStateMock extends STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf, 0) {
+  class STLStateMock extends STLState(SPFile(conf), conf, 0) {
     override def calcScore(server: HspiceServer): Double = 1.0
 
     override def calcFirstScore(server: HspiceServer): Double = 1.0

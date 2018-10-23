@@ -1,9 +1,10 @@
 import org.scalatest._
 
 class EyeSizeEvaluatorSpec extends FlatSpec with DiagrammedAssertions with PrivateMethodTester {
+  val defaultConfig = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val lisFile = new LisFile(
-    "./src/test/resources/output/template_W.lis", Config())
-  val eyeSizeEvaluator = new EyeSizeEvaluator(lisFile, Config(), Tran(".TRAN 5p 100n 0n"))
+    "./src/test/resources/output/template_W.lis", defaultConfig)
+  val eyeSizeEvaluator = new EyeSizeEvaluator(lisFile, defaultConfig, Tran(".TRAN 5p 100n 0n"))
 
   "evaluate()" should "return signal score." in {
     assert(eyeSizeEvaluator.evaluate() === 1.7699115044247788)

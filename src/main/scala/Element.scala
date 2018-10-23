@@ -1,3 +1,4 @@
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.util.Random
 
@@ -40,9 +41,10 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
       (if (rand2 < 1.0 / 3.0) 1
       else if (rand2 < 2.0 / 3.0) -1
       else 0)
-    if (newImpIndex >= conf.segmentImpList.length) newImpIndex = conf.segmentImpList.length - 1
+    val impLength = conf.segmentImpList.size
+    if (newImpIndex >= impLength) newImpIndex = impLength - 1
     if (newImpIndex < 0) newImpIndex = 0
-    val newImp = conf.segmentImpList(newImpIndex)
+    val newImp = conf.segmentImpList.asScala(newImpIndex)
 
     val newElement = this.copy()
     newElement.values.put("L", UnitUtil.doubleToStr(newLen))
@@ -52,8 +54,8 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
 
   override def random(): Element = {
     val newLen = Random.nextDouble()
-    val newImpIndex = Random.nextInt(conf.segmentImpList.length)
-    val newImp = conf.segmentImpList(newImpIndex)
+    val newImpIndex = Random.nextInt(conf.segmentImpList.size)
+    val newImp = conf.segmentImpList.asScala(newImpIndex)
     val newElement = this.copy()
     newElement.values.put("L", UnitUtil.doubleToStr(newLen))
     newElement.values.put("RLGCMODEL", newImp)

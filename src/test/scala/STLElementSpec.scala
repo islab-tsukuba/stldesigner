@@ -3,7 +3,7 @@ import org.scalatest._
 import scala.collection.mutable
 
 class STLElementSpec extends FlatSpec with DiagrammedAssertions with Matchers {
-  val conf = Config()
+  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val stlElement = STLWElement(
     "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
     0, conf)

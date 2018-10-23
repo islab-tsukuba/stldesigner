@@ -11,13 +11,12 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val server = stub[MockableSPServer]
   (server.runSpiceFile _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = Config()
-  val state =
-    STLState(SPFile("./src/test/resources/template/template_W.sp", conf), conf, 0)
+  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
+  val state = STLState(SPFile(conf), conf, 0)
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
   val hash = state.spFile.md5Hash
 
-  class MockableSPServer extends HspiceServer(cmdr, Config())
+  class MockableSPServer extends HspiceServer(cmdr, ConfigBuilder().getDefaultConfig())
 
 
   "calcScore()" should "return score of first state." in {

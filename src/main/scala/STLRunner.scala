@@ -1,16 +1,16 @@
 object STLRunner {
   def main(args: Array[String]) {
-    if (args.size == 0) {
+    if (args.size == 1) {
       println("Init servers.")
-      val server = new HspiceServer(new CommandRunner(), Config())
-      val conf = Config()
-      val firstState = STLState(SPFile("./data/template/template_W_akt_isolation_light.sp", conf), conf, 0)
+      val conf = ConfigBuilder().getFromYAML(args(0))
+      val server = new HspiceServer(new CommandRunner(), conf)
+      val firstState = STLState(SPFile(conf), conf, 0)
       val sa = SimulatedAnnealing(firstState, server, conf)
       sa.run()
       println("Close servers.")
       server.close()
     } else {
-      printf("Invalid args.")
+      printf("Invalid args. Format: mvn run [config path]")
     }
   }
 }

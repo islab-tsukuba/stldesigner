@@ -1,5 +1,6 @@
 import java.io.{File, PrintWriter}
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.util.control.Breaks
 
@@ -12,7 +13,7 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
 
   override def evaluate(): Double = {
     var score = 0.0
-    for ((k, v) <- conf.optimizeWeight) {
+    for ((k, v) <- conf.optimizeWeight.asScala) {
       val vList = lisFile.getVoltage(k)
       val singlePointScore = calcSinglePoint(vList)
       score += singlePointScore * v
@@ -76,6 +77,23 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
     1.0 / (eyeHeight + eyeWidth)
   }
 
+  def writeEyeToFile(dirPath: String, fileName: String): Unit = {
+    for ((k, v) <- conf.optimizeWeight.asScala) {
+      val lisFilePath = new File(dirPath, fileName + "_" + k + ".eye")
+      val writer = new PrintWriter(lisFilePath)
+      val eyeDiagram = getEyeLines(lisFile.getVoltage(k))
+      writer.write("t\tv1\tv2\tv3\tv4\n")
+      for (i <- 0 until eyeSize) {
+        writer.write(i * tran.resolution + "\t" +
+          eyeDiagram(0)(i) + "\t" +
+          eyeDiagram(1)(i) + "\t" +
+          eyeDiagram(2)(i) + "\t" +
+          eyeDiagram(3)(i) + "\n")
+      }
+      writer.close()
+    }
+  }
+
   private def getEyeLines(vList: Seq[Double]): Seq[Seq[Double]] = {
     val eyeDiagram = Seq.fill(4)(mutable.Seq.fill(eyeSize)(0.0))
     val maxVolts = mutable.Seq.fill(eyeSize)(0.0)
@@ -105,22 +123,5 @@ class EyeSizeEvaluator(lisFile: LisFile, conf: Config, tran: Tran) extends Signa
 
     // Shift eye diagram.
     eyeDiagram.map(valts => valts.drop(eyeStart) ++ valts.take(eyeStart))
-  }
-
-  def writeEyeToFile(dirPath: String, fileName: String): Unit = {
-    for ((k, v) <- conf.optimizeWeight) {
-      val lisFilePath = new File(dirPath, fileName + "_" + k + ".eye")
-      val writer = new PrintWriter(lisFilePath)
-      val eyeDiagram = getEyeLines(lisFile.getVoltage(k))
-      writer.write("t\tv1\tv2\tv3\tv4\n")
-      for (i <- 0 until eyeSize) {
-        writer.write(i * tran.resolution + "\t" +
-          eyeDiagram(0)(i) + "\t" +
-          eyeDiagram(1)(i) + "\t" +
-          eyeDiagram(2)(i) + "\t" +
-          eyeDiagram(3)(i) + "\n")
-      }
-      writer.close()
-    }
   }
 }
