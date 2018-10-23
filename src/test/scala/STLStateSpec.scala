@@ -28,8 +28,6 @@ class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory w
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
-    Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
-      Paths.get("/dev/shm/first.lis"))
     val score = state.calcScore(server)
     assert(score === 1.0)
   }
