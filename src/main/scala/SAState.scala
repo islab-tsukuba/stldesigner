@@ -10,7 +10,7 @@ class SAState(initState: STLState, server: HspiceServer, conf: Config, name: Str
   var bestScore = score
   var generation = 1
   var probability = 0.0
-  var logger = StateLogger("./output/" + name + "_" + id + "/")
+  var logger = StateLogger("./output/" + name + "/id_" + id + "/")
 
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
