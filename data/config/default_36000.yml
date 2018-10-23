@@ -22,7 +22,7 @@ segment_imp_list:
 - "Z115"
 - "Z120"
 optimize_weight:
-optpt3: 1.0
+  optpt3: 1.0
 eye_time: 2e-9
 eye_width_margin: 0.2
 sa_conf:
