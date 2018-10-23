@@ -6,12 +6,14 @@ class StateLogger(outputPath: String) {
   val logFilePath = new File(outputPath, "best.csv").getPath
   val logFile = new PrintWriter(logFilePath)
   logFile.write("gen, score, spFile")
+  logFile.flush()
 
   def writeData(spFile: SPFile, evaluator: EyeSizeEvaluator, gen: Int, score: Double): Unit = {
     val spFilePath = new File(outputPath, "gen" + gen + ".sp")
     spFile.writeToFile(spFilePath)
     evaluator.writeEyeToFile(outputPath, "gen" + gen)
     logFile.write(gen + ", " + score + ", " + spFilePath)
+    logFile.flush()
   }
 }
 
