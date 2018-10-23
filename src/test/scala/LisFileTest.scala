@@ -1,6 +1,6 @@
 import org.scalatest._
 
-class LisFileSpec extends FlatSpec with DiagrammedAssertions {
+class LisFileTest extends FlatSpec with DiagrammedAssertions {
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val lisFile = new LisFile(
     "./src/test/resources/output/template_W.lis", ConfigBuilder().getDefaultConfig())

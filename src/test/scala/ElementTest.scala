@@ -2,7 +2,7 @@ import org.scalatest._
 
 import scala.collection.mutable
 
-class ElementSpec extends FlatSpec with DiagrammedAssertions with Matchers {
+class ElementTest extends FlatSpec with DiagrammedAssertions {
   val element = WElement(
     "W1_SEG_1",
     Array("102", "0", "optpt1", "0"),

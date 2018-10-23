@@ -1,7 +1,7 @@
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
-class HspiceServerSpec extends FlatSpec with DiagrammedAssertions with PrivateMethodTester with MockFactory {
+class HspiceServerTest extends FlatSpec with DiagrammedAssertions with PrivateMethodTester with MockFactory {
   val cmdr = stub[CommandRunner]
   val serverOut = (port: Int) => Seq("Using: /usr/synopsys/J-2014.09-SP1-2/hspice/amd64/hspice -CC",
     " lic:",

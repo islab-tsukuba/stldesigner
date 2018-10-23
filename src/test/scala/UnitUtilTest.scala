@@ -1,6 +1,6 @@
 import org.scalatest._
 
-class UnitUtilSpec extends FlatSpec with DiagrammedAssertions with Matchers {
+class UnitUtilTest extends FlatSpec with DiagrammedAssertions {
   "WElement.strToDouble()" should "return decoded value." in {
     assert(UnitUtil.strToDouble("1.000000c") === Option(0.01))
     assert(UnitUtil.strToDouble("1.000000m") === Option(0.001))

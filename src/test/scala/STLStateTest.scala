@@ -6,7 +6,7 @@ import org.scalatest._
 
 import scala.io.Source
 
-class STLStateSpec extends FlatSpec with DiagrammedAssertions with MockFactory with PrivateMethodTester {
+class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory with PrivateMethodTester {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val server = stub[MockableSPServer]

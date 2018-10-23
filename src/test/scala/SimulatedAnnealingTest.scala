@@ -1,7 +1,7 @@
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
-class SimulatedAnnealingSpec extends FlatSpec with DiagrammedAssertions with MockFactory {
+class SimulatedAnnealingTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")

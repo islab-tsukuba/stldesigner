@@ -1,6 +1,6 @@
 import org.scalatest._
 
-class TranSpec extends FlatSpec with Matchers {
+class TranTest extends FlatSpec with Matchers {
   val tran = Tran(".TRAN 10p 24n 20n")
   "Tran" should "have tran parameters." in {
     assert(tran.resolution === (10e-12 +- 1e-20))

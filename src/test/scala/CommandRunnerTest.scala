@@ -1,6 +1,6 @@
 import org.scalatest._
 
-class CommandRunnerSpec extends FlatSpec with DiagrammedAssertions {
+class CommandRunnerTest extends FlatSpec with DiagrammedAssertions {
   val cmdr = new CommandRunner()
 
   "run()" should "return result of exec." in {

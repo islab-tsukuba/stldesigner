@@ -2,7 +2,7 @@ import org.scalatest._
 
 import scala.collection.JavaConverters._
 
-class ConfigBuilderSpec extends FlatSpec with DiagrammedAssertions {
+class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
   val builder = ConfigBuilder()
   "ConfigBuilder.getDefaultConfig()" should "return default config." in {
     val default = builder.getDefaultConfig()

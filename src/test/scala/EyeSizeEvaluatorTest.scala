@@ -1,6 +1,6 @@
 import org.scalatest._
 
-class EyeSizeEvaluatorSpec extends FlatSpec with DiagrammedAssertions with PrivateMethodTester {
+class EyeSizeEvaluatorTest extends FlatSpec with DiagrammedAssertions with PrivateMethodTester {
   val defaultConfig = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val lisFile = new LisFile(
     "./src/test/resources/output/template_W.lis", defaultConfig)

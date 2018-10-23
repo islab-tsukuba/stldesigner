@@ -2,7 +2,7 @@ import org.scalatest._
 
 import scala.io.Source
 
-class SPFileSpec extends FlatSpec with DiagrammedAssertions {
+class SPFileTest extends FlatSpec with DiagrammedAssertions {
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val spFile = SPFile(conf)
 
