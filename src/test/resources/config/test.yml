@@ -1,6 +1,10 @@
+# Config name used in output directory creation.
 name: "eye_size_multi_thread"
+# Hspice server num. Simulation is executed simultaneously in this thread num.
 hspice_server_num: 8
+# Max shift size of segment length specified in [m].
 segment_length_step: 0.001
+# Impedance list of segment.
 segment_imp_list:
 - "Z30"
 - "Z35"
@@ -21,14 +25,22 @@ segment_imp_list:
 - "Z110"
 - "Z115"
 - "Z120"
+# Optimized weight of output signal. Key is circuit optimize point.
 optimize_weight:
   optpt3: 1.0
+# Width of eye diagram specified in sec.
 eye_time: 2e-9
+# Margin of eye height calculation. Side of eye diagram is ignored at this rate.
 eye_width_margin: 0.2
+# Config of simulated annealing.
 sa_conf:
+  # Iteration num.
   max_itr: 4000
+  # Target temperature.
   target_temp: 0.01
+  # State num of simulation executed in same time.
   state_num: 8
   # Shift segment num when moving to the neighbor. -1 shifts all segments.
   shift_segment_num: -1
+# Path of template spice file.
 sp_file_path: "./src/test/resources/template/template_W.sp"
