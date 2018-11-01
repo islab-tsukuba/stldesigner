@@ -29,4 +29,6 @@ sa_conf:
   max_itr: 36000
   target_temp: 0.01
   state_num: 8
+  # Shift segment num when moving to the neighbor. -1 shifts all segments.
+  shift_segment_num: -1
 sp_file_path: "./data/template/template_W.sp"

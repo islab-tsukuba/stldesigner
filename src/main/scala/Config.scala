@@ -12,4 +12,5 @@ case class Config(@JsonProperty("name") name: String,
 
 case class SimulatedAnnealingConfig(@JsonProperty("max_itr") var maxItr: Int,
                                     @JsonProperty("target_temp") targetTemp: Double,
-                                    @JsonProperty("state_num") stateNum: Int)
+                                    @JsonProperty("state_num") stateNum: Int,
+                                    @JsonProperty("shift_segment_num") shiftSegmentNum: Int)
