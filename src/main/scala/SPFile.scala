@@ -14,7 +14,7 @@ case class SPFile(conf: Config) {
     }.map {
       case (line, i) => {
         line(0) match {
-          case 'W' => STLWElement(line, i, conf)
+          case 'W' => STLElement(line, i, conf)
           case _ => throw new RuntimeException("Invalid STL element is found.")
         }
       }
@@ -39,6 +39,17 @@ case class SPFile(conf: Config) {
     writer.close()
   }
 
+  def getString(): String = {
+    firstSPFileContent.zipWithIndex.flatMap {
+      case (line, i) =>
+        var ret: List[String] = List(line)
+        for (stlElement <- stlElements) {
+          if (stlElement.index == i) ret = stlElement.getElementLines()
+        }
+        ret
+    }.mkString("\n")
+  }
+
   def writeFirstToFile(file: File): Unit = {
     val writer = new PrintWriter(file)
     writer.write(firstSPFileContent.mkString("\n"))
@@ -56,16 +67,5 @@ case class SPFile(conf: Config) {
     val bigInt = new BigInteger(1, digest)
     val hashedString = bigInt.toString(16)
     hashedString
-  }
-
-  def getString(): String = {
-    firstSPFileContent.zipWithIndex.flatMap {
-      case (line, i) =>
-        var ret: List[String] = List(line)
-        for (stlElement <- stlElements) {
-          if (stlElement.index == i) ret = stlElement.getElementLines()
-        }
-        ret
-    }.mkString("\n")
   }
 }

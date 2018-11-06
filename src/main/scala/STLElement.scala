@@ -1,27 +1,6 @@
 import scala.collection.mutable
 
-trait STLElement {
-  val line: String
-  val index: Int
-
-  def deepCopy(): STLElement
-
-  def getNeighbour(): STLElement
-
-  def assignRandom(): STLElement
-
-  def getElementLines(): List[String]
-
-  def getElements(): Seq[Element]
-
-  // TODO: implement crossover for GA.
-  // def crossover(element: STLElement): STLElement
-
-  // TODO: implement getRandomElement for GA.
-  // def randomElement(): STLElement
-}
-
-case class STLWElement(line: String, index: Int, conf: Config) extends STLElement {
+case class STLElement(line: String, index: Int, conf: Config) {
   val splitLine: Array[String] = line.split("""\s+""")
   val name: String = splitLine(0)
   val nameIndex: Int = """^.(\d)_.*""".r.findAllIn(name).group(1).toInt
@@ -34,13 +13,13 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
   val totalLen = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
   var elements: Seq[Element] = createElements()
 
-  override def deepCopy(): STLElement = {
+  def deepCopy(): STLElement = {
     val copy = this.copy()
     copy.elements = elements.map(element => element.deepCopy())
     copy
   }
 
-  override def getNeighbour(): STLElement = {
+  def getNeighbour(): STLElement = {
     val newSTLElement = this.copy()
     newSTLElement.elements = this.elements.map(element => element.shift())
     newSTLElement.adjustLength()
@@ -53,17 +32,17 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
     this
   }
 
-  override def assignRandom(): STLElement = {
+  def assignRandom(): STLElement = {
     val newSTLElement = this.copy()
     newSTLElement.elements = this.elements.map(element => element.random())
     newSTLElement.adjustLength()
   }
 
-  override def getElementLines(): List[String] = {
+  def getElementLines(): List[String] = {
     elements.map(element => element.getString()).toList
   }
 
-  override def getElements(): Seq[Element] = elements
+  def getElements(): Seq[Element] = elements
 
   private def createElements(): Seq[WElement] = {
     var lenSum = 0.0
