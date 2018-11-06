@@ -19,9 +19,18 @@ case class STLElement(line: String, index: Int, conf: Config) {
     copy
   }
 
-  def getNeighbour(): STLElement = {
+  def getNeighbour(shiftList: Seq[Boolean]): STLElement = {
     val newSTLElement = this.copy()
-    newSTLElement.elements = this.elements.map(element => element.shift())
+    newSTLElement.elements =
+      for (i <- shiftList.indices) yield {
+        var element: Element = null
+        if (shiftList(i)) {
+          element = elements(i).shift()
+        } else {
+          element = elements(i)
+        }
+        element
+      }
     newSTLElement.adjustLength()
   }
 

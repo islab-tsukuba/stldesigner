@@ -52,9 +52,13 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
     ))
   }
 
-  "getNeighbour()" should "return same length as first element." in {
-    val elements = stlElement.getNeighbour().getElements()
-    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
+  "getNeighbour()" should "execute single element shift." in {
+    val elements = stlElement.getNeighbour(Seq(true, false, false, false, false)).getElements()
+    val lengthList = elements.map(_.getLength())
+    val subList = lengthList.slice(1, stlElement.sepNum)
+    val nonShiftedLen = subList(0)
+    assert(subList.count(_ == nonShiftedLen) === subList.length)
+    assert(lengthList.sum === (0.1 +- 0.000001))
   }
 
   "assignRandom()" should "return same length as first element." in {
