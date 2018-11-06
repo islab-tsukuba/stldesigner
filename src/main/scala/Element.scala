@@ -13,7 +13,7 @@ trait Element {
 
   def getLength(): Double
 
-  def setLength(len: Double)
+  def setLength(len: Double): Element
 }
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
@@ -59,8 +59,9 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     UnitUtil.strToDouble(lenStr).getOrElse(0.0)
   }
 
-  override def setLength(len: Double): Unit = {
+  override def setLength(len: Double): Element = {
     values.put("L", UnitUtil.doubleToStr(len))
+    this
   }
 
   def getImpedance(): String = {

@@ -12,6 +12,8 @@ trait STLElement {
 
   def getElementLines(): List[String]
 
+  def getElements(): Seq[Element]
+
   // TODO: implement crossover for GA.
   // def crossover(element: STLElement): STLElement
 
@@ -28,6 +30,8 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
   val nodes: Array[String] = params.take(4)
   // Use LinkedHashMap to keep order of values.
   val values: mutable.LinkedHashMap[String, String] = createValueMap()
+  val lenStr = this.values.getOrElse("L", throw new RuntimeException("Length is not defined."))
+  val totalLen = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
   var elements: Seq[Element] = createElements()
 
   override def deepCopy(): STLElement = {
@@ -39,23 +43,30 @@ case class STLWElement(line: String, index: Int, conf: Config) extends STLElemen
   override def getNeighbour(): STLElement = {
     val newSTLElement = this.copy()
     newSTLElement.elements = this.elements.map(element => element.shift())
-    newSTLElement
+    newSTLElement.adjustLength()
+  }
+
+  private def adjustLength(): STLElement = {
+    val currentTotalLen = elements.map(_.getLength()).sum
+    val ratio = totalLen / currentTotalLen
+    elements.map(element => element.setLength(element.getLength() * ratio))
+    this
   }
 
   override def assignRandom(): STLElement = {
     val newSTLElement = this.copy()
     newSTLElement.elements = this.elements.map(element => element.random())
-    newSTLElement
+    newSTLElement.adjustLength()
   }
 
   override def getElementLines(): List[String] = {
     elements.map(element => element.getString()).toList
   }
 
+  override def getElements(): Seq[Element] = elements
+
   private def createElements(): Seq[WElement] = {
     var lenSum = 0.0
-    val lenStr = this.values.getOrElse("L", throw new RuntimeException("Length is not defined."))
-    val totalLen = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
     for (i <- 0 until sepNum) yield {
       val name = this.name.split("_")(0) + "_SEG_" + (i + 1).toString
       val node_start = if (i == 0) this.nodes(0) else 1000 * nameIndex * 2 + i - 1

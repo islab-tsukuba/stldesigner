@@ -2,7 +2,7 @@ import org.scalatest._
 
 import scala.collection.mutable
 
-class STLElementTest extends FlatSpec with DiagrammedAssertions {
+class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers with PrivateMethodTester {
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val stlElement = STLWElement(
     "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
@@ -50,5 +50,13 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions {
         conf
       ).getString()
     ))
+  }
+
+  "adjustLength()" should "adjust segment total length." in {
+    val adjustLength: PrivateMethod[STLElement] = PrivateMethod[STLElement]('adjustLength)
+    stlElement.assignRandom()
+    val newElement = stlElement invokePrivate adjustLength()
+    val elements = newElement.getElements()
+    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }
 }
