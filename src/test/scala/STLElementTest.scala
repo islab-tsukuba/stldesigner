@@ -52,11 +52,13 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
     ))
   }
 
-  "adjustLength()" should "adjust segment total length." in {
-    val adjustLength: PrivateMethod[STLElement] = PrivateMethod[STLElement]('adjustLength)
-    stlElement.assignRandom()
-    val newElement = stlElement invokePrivate adjustLength()
-    val elements = newElement.getElements()
+  "getNeighbour()" should "return same length as first element." in {
+    val elements = stlElement.getNeighbour().getElements()
+    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
+  }
+
+  "assignRandom()" should "return same length as first element." in {
+    val elements = stlElement.assignRandom().getElements()
     assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }
 }
