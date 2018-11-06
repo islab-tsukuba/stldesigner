@@ -2,9 +2,9 @@ import org.scalatest._
 
 import scala.collection.mutable
 
-class STLElementTest extends FlatSpec with DiagrammedAssertions {
+class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers with PrivateMethodTester {
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
-  val stlElement = STLWElement(
+  val stlElement = STLElement(
     "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
     0, conf)
 
@@ -50,5 +50,15 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions {
         conf
       ).getString()
     ))
+  }
+
+  "getNeighbour()" should "return same length as first element." in {
+    val elements = stlElement.getNeighbour().getElements()
+    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
+  }
+
+  "assignRandom()" should "return same length as first element." in {
+    val elements = stlElement.assignRandom().getElements()
+    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }
 }
