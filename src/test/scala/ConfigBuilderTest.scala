@@ -6,7 +6,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
   val builder = ConfigBuilder()
   "ConfigBuilder.getDefaultConfig()" should "return default config." in {
     val default = builder.getDefaultConfig()
-    assert(default.name === "eye_size_multi_thread")
+    assert(default.name === "default")
     assert(default.hspiceServerNum === 8)
     assert(default.segmentLengthStep === 0.001)
     assert(default.segmentImpList.asScala === Seq(
@@ -16,7 +16,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
     assert(default.optimizeWeight.asScala === Map("optpt3" -> 1.0))
     assert(default.eyeTime === 2e-9)
     assert(default.eyeWidthMargin === 0.2)
-    assert(default.saConf === SimulatedAnnealingConfig(4000, 0.01, 8))
+    assert(default.saConf === SimulatedAnnealingConfig(4000, 0.01, 8, -1))
     assert(default.spFilePath === "./data/template/template_W.sp")
   }
 
@@ -32,7 +32,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
     assert(conf.optimizeWeight.asScala === Map("optpt3" -> 1.0))
     assert(conf.eyeTime === 2e-9)
     assert(conf.eyeWidthMargin === 0.2)
-    assert(conf.saConf === SimulatedAnnealingConfig(4000, 0.01, 8))
+    assert(conf.saConf === SimulatedAnnealingConfig(4000, 0.01, 8, -1))
     assert(conf.spFilePath === "./src/test/resources/template/template_W.sp")
   }
 }

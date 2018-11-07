@@ -1,5 +1,8 @@
 import java.io.{File, FilenameFilter}
 
+import scala.collection.mutable
+import scala.util.Random
+
 case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
@@ -34,9 +37,34 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
 
   private def shiftSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
-    val newStlElements = stlElements.map(stlElement => stlElement.getNeighbour())
+    val totalSegNum = stlElements.map(_.sepNum).sum
+    val shiftSegmentList = createShiftSegmentList(totalSegNum, conf.saConf.shiftSegmentNum)
+    var begin = 0
+    val newStlElements = stlElements.map {
+      stlElement => {
+        stlElement.getNeighbour(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
+        begin = stlElement.sepNum
+        stlElement
+      }
+    }
     spFile.setSTLElements(newStlElements)
     this
+  }
+
+  private def createShiftSegmentList(totalSegment: Int, shiftSegment: Int): Seq[Boolean] = {
+    if (shiftSegment == -1 || totalSegment <= shiftSegment) {
+      return Seq.fill(totalSegment)(true)
+    }
+    val ret = mutable.Seq.fill(totalSegment)(false)
+    for (i <- 0 until shiftSegment) {
+      val position = Random.nextInt(totalSegment - i)
+      var skip = 0
+      for (j <- 0 to position) {
+        while (ret(j + skip)) skip += 1
+      }
+      ret(position + skip) = true
+    }
+    ret
   }
 
   def createRandom(): STLState = {

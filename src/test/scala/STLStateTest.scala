@@ -48,4 +48,11 @@ class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory w
     val newFileLength = newSpFile.getLines().length
     assert(newState.spFile.getString().split("\n").length === newFileLength)
   }
+
+  "createShiftSegmentList()" should "return list of segment shifted by createNeighbor function." in {
+    val createShiftSegmentList: PrivateMethod[Seq[Boolean]] = PrivateMethod[Seq[Boolean]]('createShiftSegmentList)
+    val seq = state invokePrivate createShiftSegmentList(10, 3)
+    assert(seq.length === 10)
+    assert(seq.count(_ == true) === 3)
+  }
 }

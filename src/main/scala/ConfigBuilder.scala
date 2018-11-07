@@ -8,7 +8,7 @@ import scala.collection.JavaConverters._
 class ConfigBuilder {
   def getDefaultConfig(): Config = {
     Config(
-      "eye_size_multi_thread",
+      "default",
       8,
       0.001,
       Seq(
@@ -18,7 +18,7 @@ class ConfigBuilder {
       Map("optpt3" -> 1.0).asJava,
       2e-9,
       0.2,
-      SimulatedAnnealingConfig(4000, 0.01, 8),
+      SimulatedAnnealingConfig(4000, 0.01, 8, -1),
       "./data/template/template_W.sp")
   }
 
