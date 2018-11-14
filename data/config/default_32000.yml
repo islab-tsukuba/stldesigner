@@ -1,5 +1,5 @@
 # Config name used in output directory creation.
-name: "eye_size_multi_thread_36000"
+name: "eye_size_multi_thread_32000"
 # Hspice server num. Simulation is executed simultaneously in this thread num.
 hspice_server_num: 8
 # Max shift size of segment length specified in [m].
@@ -35,7 +35,7 @@ eye_width_margin: 0.2
 # Config of simulated annealing.
 sa_conf:
   # Iteration num.
-  max_itr: 36000
+  max_itr: 32000
   # Target temperature.
   target_temp: 0.01
   # State num of simulation executed in same time.
