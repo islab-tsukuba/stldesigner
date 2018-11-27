@@ -1,5 +1,5 @@
 # Config name used in output directory creation.
-name: "eye_size_multi_thread"
+name: "default"
 # Hspice server num. Simulation is executed simultaneously in this thread num.
 hspice_server_num: 8
 # Max shift size of segment length specified in [m].
