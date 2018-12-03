@@ -29,6 +29,7 @@ def run():
                 sum_list[i] += score_list[i]
         average_list = [s / child_num for s in sum_list]
         plt.plot([x + 1 for x in range(args.plot_gen)], average_list, '-', label=tag, linewidth=1)
+        print("[" + tag + "] Best score: " + str(average_list[len(average_list)-1]))
     plt.legend(loc='upper right', shadow=True, fontsize='x-large')
     plt.yscale("log")
     if args.eps:
