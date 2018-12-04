@@ -33,7 +33,10 @@ def run():
         print('[' + tag + '] Best score: ' + str(average_list[len(average_list) - 1]))
     plt.legend(loc='upper right', shadow=True, fontsize='x-large')
     plt.yscale('log')
-    if args.eps != "":
+    ax = plt.axes()
+    ax.set_xlabel('Generation')
+    ax.set_ylabel('Score')
+    if args.eps != '':
         plt.savefig(args.eps)
     else:
         plt.show()

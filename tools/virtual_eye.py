@@ -42,7 +42,10 @@ def run():
     eye_lines = get_eye_lines(vlist, eye_size)
     for line in eye_lines:
         plt.plot([x * args.resolution for x in range(eye_size)], line, '-', linewidth=2, color='k')
-    if args.eps != "":
+    ax = plt.axes()
+    ax.set_xlabel('Time [ns]')
+    ax.set_ylabel('Voltage [V]')
+    if args.eps != '':
         plt.savefig(args.eps)
     else:
         plt.show()
