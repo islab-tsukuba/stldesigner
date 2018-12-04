@@ -12,7 +12,8 @@ def run():
                         help='Resolution of spice simulation. Example: 5e-12')
     parser.add_argument('--opt-point', metavar='[point]', type=str, required=True,
                         help='Optimize point of output file.')
-    parser.add_argument('--eps', action='store_true', help='Output to eps file.')
+    parser.add_argument('--eps', metavar='[file]', type=str, required=False, default="",
+                        help='Output EPS file name. If it is no specified, file is not outputted.')
 
     args = parser.parse_args()
 
@@ -41,8 +42,8 @@ def run():
     eye_lines = get_eye_lines(vlist, eye_size)
     for line in eye_lines:
         plt.plot([x * args.resolution for x in range(eye_size)], line, '-', linewidth=2)
-    if args.eps:
-        plt.savefig('out.eps')
+    if args.eps != "":
+        plt.savefig(args.eps)
     else:
         plt.show()
 

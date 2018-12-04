@@ -12,7 +12,8 @@ def run():
                              'Example:[{"tag":"default", "path":"../output/default"}]')
     parser.add_argument('-g', '--plot-gen', metavar='N', type=int, required=True,
                         help='Generation num of plot.')
-    parser.add_argument('--eps', action='store_true', help='Output to eps file.')
+    parser.add_argument('--eps', metavar='[file]', type=str, required=False, default="",
+                        help='Output EPS file name. If it is no specified, file is not outputted.')
 
     args = parser.parse_args()
 
@@ -32,8 +33,8 @@ def run():
         print('[' + tag + '] Best score: ' + str(average_list[len(average_list) - 1]))
     plt.legend(loc='upper right', shadow=True, fontsize='x-large')
     plt.yscale('log')
-    if args.eps:
-        plt.savefig('out.eps')
+    if args.eps != "":
+        plt.savefig(args.eps)
     else:
         plt.show()
 
