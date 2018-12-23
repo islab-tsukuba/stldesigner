@@ -39,7 +39,7 @@ def run():
     opt_index = val_names.index(args.opt_point) + 1
     vlist = [vals[opt_index] for vals in val_list]
     eye_size = int(args.eye_time / args.resolution)
-    eye_lines = get_eye_lines(vlist, eye_size)
+    eye_lines = get_eye_lines(vlist, eye_size, args.resolution)
     for line in eye_lines:
         plt.plot([x * args.resolution * 1000000000 for x in range(eye_size)], line, '-', linewidth=2, color='k')
     ax = plt.axes()
@@ -65,7 +65,7 @@ def parse_vals_to_float(vals):
 
 
 # Create virtual eye diagram.
-def get_eye_lines(vlist, eye_size):
+def get_eye_lines(vlist, eye_size, resolution):
     eye_lines = [[0.0] * eye_size for l in range(4)]
     max_volts = [0.0] * eye_size
     for i in range(len(vlist)):
@@ -90,6 +90,24 @@ def get_eye_lines(vlist, eye_size):
     # Shift eye diagram.
     for i in range(len(eye_lines)):
         eye_lines[i] = eye_lines[i][eye_start:] + eye_lines[i][:eye_start]
+
+    # Print eye size info.
+    min_volt = float("inf")
+    eye_open_max = 0
+    eye_open_min = 0
+    eye_open_start = 0
+    eye_open_end = 0
+    for i in range(eye_size):
+        if (eye_lines[1][i] < min_volt):
+            min_volt = eye_lines[1][i]
+            eye_open_max = eye_lines[2][i]
+            eye_open_min = eye_lines[1][i]
+        if (eye_lines[1][i] < eye_lines[2][i] and eye_open_start == 0):
+            eye_open_start = i
+        if (eye_lines[1][i] >= eye_lines[2][i] and eye_open_start != 0):
+            eye_open_end = i
+    print('Eye width: ' + str((eye_open_end - eye_open_start) * resolution))
+    print('Eye height: ' + str(eye_open_max - eye_open_min))
 
     return eye_lines
 
