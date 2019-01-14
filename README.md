@@ -36,3 +36,5 @@ After setup, you can run scripts in tools directory.
 ```
 $ python create_graph.py
 ```
+
+Sample command is written in tools/README.md.
