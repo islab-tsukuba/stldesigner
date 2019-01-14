@@ -12,6 +12,8 @@ def run():
                         help='Resolution of spice simulation. Example: 5e-12')
     parser.add_argument('--opt-point', metavar='[point]', type=str, required=True,
                         help='Optimize point of output file.')
+    parser.add_argument('--shift-ratio', metavar='[ratio]', type=float, required=False, default=0.0,
+                        help='Shift ratio of eye-diagram. Example: 0.1')
     parser.add_argument('--eps', metavar='[file]', type=str, required=False, default="",
                         help='Output EPS file name. If it is no specified, file is not outputted.')
 
@@ -39,9 +41,12 @@ def run():
     opt_index = val_names.index(args.opt_point) + 1
     vlist = [vals[opt_index] for vals in val_list]
     eye_size = int(args.eye_time / args.resolution)
+    shift_steps = int(eye_size * args.shift_ratio)
     for i in range(int(len(vlist) / eye_size)):
-        plt.plot([x * args.resolution * 1000000000 for x in range(eye_size)],
-                 vlist[i * eye_size:(i + 1) * eye_size], '-', linewidth=2, color='b')
+        plt.plot([(x + shift_steps) * args.resolution * 1000000000 for x in range(eye_size - shift_steps)],
+                 vlist[i * eye_size:(i + 1) * eye_size - shift_steps], '-', linewidth=2, color='b')
+        plt.plot([x * args.resolution * 1000000000 for x in range(shift_steps + 1)],
+                 vlist[(i + 1) * eye_size - shift_steps:(i + 1) * eye_size + 1], '-', linewidth=2, color='b')
     ax = plt.axes()
     ax.set_xlabel('Time [ns]')
     ax.set_ylabel('Voltage [V]')
