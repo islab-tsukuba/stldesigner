@@ -41,7 +41,7 @@ def run():
     eye_size = int(args.eye_time / args.resolution)
     for i in range(int(len(vlist) / eye_size)):
         plt.plot([x * args.resolution * 1000000000 for x in range(eye_size)],
-                 vlist[i * eye_size:(i + 1) * eye_size], '-', linewidth=2, color='k')
+                 vlist[i * eye_size:(i + 1) * eye_size], '-', linewidth=2, color='b')
     ax = plt.axes()
     ax.set_xlabel('Time [ns]')
     ax.set_ylabel('Voltage [V]')
