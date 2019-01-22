@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 After setup, you can run scripts in tools directory.
 
 ```
-$ python create_graph.py
+$ python score_graph.py -h
 ```
 
 Sample command is written in tools/README.md.
