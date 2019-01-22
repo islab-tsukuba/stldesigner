@@ -7,6 +7,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
   "ConfigBuilder.getDefaultConfig()" should "return default config." in {
     val default = builder.getDefaultConfig()
     assert(default.name === "default")
+    assert(default.randomSeed === 1)
     assert(default.hspiceServerNum === 8)
     assert(default.segmentLengthStep === 0.001)
     assert(default.segmentImpList.asScala === Seq(
@@ -23,6 +24,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
   "ConfigBuilder.getFromYAML()" should "return yaml config." in {
     val conf = builder.getFromYAML("./src/test/resources/config/test.yml")
     assert(conf.name === "eye_size_multi_thread")
+    assert(conf.randomSeed === 1)
     assert(conf.hspiceServerNum === 8)
     assert(conf.segmentLengthStep === 0.001)
     assert(conf.segmentImpList.asScala === Seq(

@@ -1,30 +1,32 @@
 # Config name used in output directory creation.
 name: "eye_size_multi_thread"
+# Seed of random class. If it is fixed, STLDesigner generates same result.
+random_seed: 1
 # Hspice server num. Simulation is executed simultaneously in this thread num.
 hspice_server_num: 8
 # Max shift size of segment length specified in [m].
 segment_length_step: 0.001
 # Impedance list of segment.
 segment_imp_list:
-- "Z30"
-- "Z35"
-- "Z40"
-- "Z45"
-- "Z50"
-- "Z55"
-- "Z60"
-- "Z65"
-- "Z70"
-- "Z75"
-- "Z80"
-- "Z85"
-- "Z90"
-- "Z95"
-- "Z100"
-- "Z105"
-- "Z110"
-- "Z115"
-- "Z120"
+  - "Z30"
+  - "Z35"
+  - "Z40"
+  - "Z45"
+  - "Z50"
+  - "Z55"
+  - "Z60"
+  - "Z65"
+  - "Z70"
+  - "Z75"
+  - "Z80"
+  - "Z85"
+  - "Z90"
+  - "Z95"
+  - "Z100"
+  - "Z105"
+  - "Z110"
+  - "Z115"
+  - "Z120"
 # Optimized weight of output signal. Key is circuit optimize point.
 optimize_weight:
   optpt3: 1.0

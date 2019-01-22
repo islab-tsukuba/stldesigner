@@ -9,6 +9,7 @@ class ConfigBuilder {
   def getDefaultConfig(): Config = {
     Config(
       "default",
+      1,
       8,
       0.001,
       Seq(

@@ -1,6 +1,7 @@
 import com.fasterxml.jackson.annotation.JsonProperty
 
 case class Config(@JsonProperty("name") name: String,
+                  @JsonProperty("random_seed") randomSeed: Int,
                   @JsonProperty("hspice_server_num") hspiceServerNum: Int,
                   @JsonProperty("segment_length_step") segmentLengthStep: Double,
                   @JsonProperty("segment_imp_list") segmentImpList: java.util.List[String],
