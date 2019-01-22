@@ -7,8 +7,9 @@ class SimulatedAnnealingTest extends FlatSpec with DiagrammedAssertions with Moc
   val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   conf.saConf.maxItr = 10
   val server = stub[MockableSPServer]
+  val sa = SimulatedAnnealing(server, conf)
   val stlState = new STLStateMock()
-  val sa = SimulatedAnnealing(stlState, server, conf)
+  sa.firstState = stlState
 
   class STLStateMock extends STLState(SPFile(conf), conf, 0) {
     override def calcScore(server: HspiceServer): Double = 1.0

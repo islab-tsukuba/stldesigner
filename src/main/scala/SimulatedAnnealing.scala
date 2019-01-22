@@ -3,8 +3,9 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import scala.util.Random
 
-class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Config) {
-  Random.setSeed(1)
+class SimulatedAnnealing(server: HspiceServer, conf: Config) {
+  var firstState = STLState(SPFile(conf), conf, 0)
+  Random.setSeed(conf.randomSeed)
 
   def run(): STLState = {
     firstState.calcFirstScore(server)
@@ -39,6 +40,6 @@ class SimulatedAnnealing(firstState: STLState, server: HspiceServer, conf: Confi
 }
 
 object SimulatedAnnealing {
-  def apply(firstState: STLState, server: HspiceServer, conf: Config):
-  SimulatedAnnealing = new SimulatedAnnealing(firstState, server, conf)
+  def apply(server: HspiceServer, conf: Config):
+  SimulatedAnnealing = new SimulatedAnnealing(server, conf)
 }
