@@ -52,10 +52,9 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     val newImp = conf.segmentImpList.asScala(newImpIndex)
 
-    val newElement = this.copy()
-    newElement.setLength(newLen)
-    newElement.setImpedance(newImp)
-    newElement
+    setLength(newLen)
+    setImpedance(newImp)
+    this
   }
 
   override def getLength(): Double = {
