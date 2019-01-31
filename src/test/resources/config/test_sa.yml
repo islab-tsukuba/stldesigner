@@ -34,6 +34,8 @@ optimize_weight:
 eye_time: 2e-9
 # Margin of eye height calculation. Side of eye diagram is ignored at this rate.
 eye_width_margin: 0.2
+# Optimization logic. We can specify ga(Genetic Algorithm) and sa(Simulated annealing).
+optimization_logic: "sa"
 # Config of simulated annealing.
 sa_conf:
   # Iteration num.

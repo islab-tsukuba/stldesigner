@@ -1,12 +1,12 @@
 package jp.ac.tsukuba.islab.stldesigner.circuit
 
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalatest._
 
 import scala.collection.mutable
 
 class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers with PrivateMethodTester {
-  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val stlElement = STLElement(
     "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
     0, conf)

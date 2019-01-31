@@ -1,14 +1,14 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
 import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, ExecResult, HspiceServer, SPFile}
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
 class SimulatedAnnealingTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   conf.saConf.maxItr = 10
   val server = stub[MockableSPServer]
   val sa = SimulatedAnnealing(server, conf)

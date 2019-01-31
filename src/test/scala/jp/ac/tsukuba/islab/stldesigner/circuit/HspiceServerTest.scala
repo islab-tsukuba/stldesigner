@@ -1,6 +1,6 @@
 package jp.ac.tsukuba.islab.stldesigner.circuit
 
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
@@ -39,7 +39,8 @@ class HspiceServerTest extends FlatSpec with DiagrammedAssertions with PrivateMe
     .returns(ExecResult(0, serverOut(25007), Seq())).once()
   (cmdr.runCommand _).when("hspice -CC >& /tmp/out.txt && sleep 2 && cat /tmp/out.txt")
     .returns(ExecResult(0, serverOut(25008), Seq())).once()
-  val hServer = new HspiceServer(cmdr, ConfigBuilder().getDefaultConfig())
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
+  val hServer = new HspiceServer(cmdr, conf)
   "spice.HspiceServer()" should "exec hspice servers and set server ports" in {
     assert(hServer.getServerPorts() === Seq(25001, 25002, 25003, 25004, 25005, 25006, 25007, 25008))
   }

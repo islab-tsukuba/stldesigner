@@ -1,15 +1,16 @@
 package jp.ac.tsukuba.islab.stldesigner.circuit
 
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalatest._
 
 import scala.collection.mutable
 
 class ElementTest extends FlatSpec with DiagrammedAssertions {
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val element = WElement(
     "W1_SEG_1",
     Array("102", "0", "optpt1", "0"),
-    mutable.LinkedHashMap("RLGCMODEL" -> "Z50", "N" -> "1", "L" -> "100m"), ConfigBuilder().getDefaultConfig())
+    mutable.LinkedHashMap("RLGCMODEL" -> "Z50", "N" -> "1", "L" -> "100m"), conf)
 
   "WElement.getString()" should "return spice line." in {
     assert(element.getString() === "W1_SEG_1 102 0 optpt1 0 RLGCMODEL=Z50 N=1 L=100m")

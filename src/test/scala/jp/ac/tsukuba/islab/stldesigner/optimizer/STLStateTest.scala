@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.{Files, Paths}
 
 import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, ExecResult, HspiceServer, SPFile}
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
@@ -13,14 +13,14 @@ import scala.io.Source
 class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory with PrivateMethodTester {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val server = stub[MockableSPServer]
   (server.runSpiceFile _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
   val state = STLState(SPFile(conf), conf, 0)
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
   val hash = state.spFile.md5Hash
 
-  class MockableSPServer extends HspiceServer(cmdr, ConfigBuilder().getDefaultConfig())
+  class MockableSPServer extends HspiceServer(cmdr, conf)
 
 
   "calcScore()" should "return score of first state." in {
