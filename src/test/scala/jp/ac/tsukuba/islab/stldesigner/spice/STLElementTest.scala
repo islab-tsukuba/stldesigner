@@ -55,8 +55,8 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
     ))
   }
 
-  "getNeighbour()" should "execute single element shift." in {
-    val elements = stlElement.getNeighbour(Seq(true, false, false, false, false)).getElements()
+  "shiftElements()" should "execute single element shift." in {
+    val elements = stlElement.shiftElements(Seq(true, false, false, false, false)).getElements()
     val lengthList = elements.map(_.getLength())
     val subList = lengthList.slice(1, stlElement.sepNum)
     val nonShiftedLen = subList(0)

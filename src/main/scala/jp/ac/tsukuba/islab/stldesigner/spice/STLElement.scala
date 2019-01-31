@@ -23,9 +23,8 @@ case class STLElement(line: String, index: Int, conf: Config) {
     copy
   }
 
-  def getNeighbour(shiftList: Seq[Boolean]): STLElement = {
-    val newSTLElement = this.copy()
-    newSTLElement.elements =
+  def shiftElements(shiftList: Seq[Boolean]): STLElement = {
+    elements =
       for (i <- shiftList.indices) yield {
         var element: Element = null
         if (shiftList(i)) {
@@ -34,8 +33,9 @@ case class STLElement(line: String, index: Int, conf: Config) {
           element = elements(i)
         }
         element
-      }
-    newSTLElement.adjustLength()
+    }
+    adjustLength()
+    this
   }
 
   private def adjustLength(): STLElement = {
@@ -46,9 +46,9 @@ case class STLElement(line: String, index: Int, conf: Config) {
   }
 
   def assignRandom(): STLElement = {
-    val newSTLElement = this.copy()
-    newSTLElement.elements = this.elements.map(element => element.random())
-    newSTLElement.adjustLength()
+    elements = this.elements.map(element => element.random())
+    adjustLength()
+    this
   }
 
   def getElementLines(): List[String] = {

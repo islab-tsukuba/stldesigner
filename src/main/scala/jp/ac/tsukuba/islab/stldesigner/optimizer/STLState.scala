@@ -48,7 +48,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     var begin = 0
     val newStlElements = stlElements.map {
       stlElement => {
-        stlElement.getNeighbour(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
+        stlElement.shiftElements(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
         begin = stlElement.sepNum
         stlElement
       }
