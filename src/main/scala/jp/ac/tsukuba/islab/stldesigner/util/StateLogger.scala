@@ -3,7 +3,7 @@ package jp.ac.tsukuba.islab.stldesigner.util
 import java.io.{File, PrintWriter}
 
 import jp.ac.tsukuba.islab.stldesigner.evaluator.EyeSizeEvaluator
-import jp.ac.tsukuba.islab.stldesigner.spice.SPFile
+import jp.ac.tsukuba.islab.stldesigner.circuit.SPFile
 
 class StateLogger(outputPath: String) {
   val dir = new File(outputPath)

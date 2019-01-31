@@ -2,7 +2,7 @@ package jp.ac.tsukuba.islab.stldesigner.evaluator
 
 import java.io.{File, PrintWriter}
 
-import jp.ac.tsukuba.islab.stldesigner.spice.{LisFile, Tran}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{LisFile, Tran}
 import jp.ac.tsukuba.islab.stldesigner.util.Config
 
 import scala.collection.JavaConverters._

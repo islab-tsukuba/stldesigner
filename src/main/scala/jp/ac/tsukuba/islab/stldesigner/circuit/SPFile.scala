@@ -1,4 +1,4 @@
-package jp.ac.tsukuba.islab.stldesigner.spice
+package jp.ac.tsukuba.islab.stldesigner.circuit
 
 import java.io.{File, PrintWriter}
 import java.math.BigInteger

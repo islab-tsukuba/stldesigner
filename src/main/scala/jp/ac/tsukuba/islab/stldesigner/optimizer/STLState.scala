@@ -3,7 +3,7 @@ package jp.ac.tsukuba.islab.stldesigner.optimizer
 import java.io.{File, FilenameFilter}
 
 import jp.ac.tsukuba.islab.stldesigner.evaluator.EyeSizeEvaluator
-import jp.ac.tsukuba.islab.stldesigner.spice.{HspiceServer, LisFile, SPFile, STLElement}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{HspiceServer, LisFile, SPFile, STLElement}
 import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 
 import scala.collection.mutable

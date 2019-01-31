@@ -1,4 +1,4 @@
-package jp.ac.tsukuba.islab.stldesigner.spice
+package jp.ac.tsukuba.islab.stldesigner.circuit
 
 import scala.collection.mutable.ArrayBuffer
 import scala.sys.process.{Process, ProcessLogger}

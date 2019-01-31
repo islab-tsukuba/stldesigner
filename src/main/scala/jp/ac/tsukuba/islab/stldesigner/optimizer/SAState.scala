@@ -1,6 +1,6 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
-import jp.ac.tsukuba.islab.stldesigner.spice.HspiceServer
+import jp.ac.tsukuba.islab.stldesigner.circuit.HspiceServer
 import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 
 import scala.concurrent.ExecutionContext.Implicits.global

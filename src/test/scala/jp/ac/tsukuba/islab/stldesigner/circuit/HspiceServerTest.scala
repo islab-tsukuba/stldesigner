@@ -1,4 +1,4 @@
-package jp.ac.tsukuba.islab.stldesigner.spice
+package jp.ac.tsukuba.islab.stldesigner.circuit
 
 import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
 import org.scalamock.scalatest.MockFactory

@@ -1,7 +1,7 @@
 package jp.ac.tsukuba.islab.stldesigner.runner
 
 import jp.ac.tsukuba.islab.stldesigner.optimizer.SimulatedAnnealing
-import jp.ac.tsukuba.islab.stldesigner.spice.{CommandRunner, HspiceServer}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, HspiceServer}
 import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
 
 object STLRunner {

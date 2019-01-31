@@ -1,6 +1,6 @@
 package jp.ac.tsukuba.islab.stldesigner.evaluator
 
-import jp.ac.tsukuba.islab.stldesigner.spice.{LisFile, Tran}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{LisFile, Tran}
 import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
 import org.scalatest._
 

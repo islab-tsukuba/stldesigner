@@ -1,6 +1,6 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
-import jp.ac.tsukuba.islab.stldesigner.spice.{CommandRunner, ExecResult, HspiceServer, SPFile}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, ExecResult, HspiceServer, SPFile}
 import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
