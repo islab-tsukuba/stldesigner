@@ -1,4 +1,4 @@
-# STLDesigner4
+# STLDesigner
 
 STLDesigner is a optimizer for Segmental Transmission Line(STL)
 
