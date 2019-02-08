@@ -38,7 +38,7 @@ class ConfigBuilderTest extends FlatSpec with DiagrammedAssertions {
     assert(conf.eyeTime === 2e-9)
     assert(conf.eyeWidthMargin === 0.2)
     assert(conf.optimizationLogic === "ga")
-    assert(conf.gaConf === GeneticAlgorithmConfig(4000, 100, "blx_alpha", 3.66, "normal"))
+    assert(conf.gaConf === GeneticAlgorithmConfig(4000, 100, "blx_alpha", 0.366, "normal"))
     assert(conf.spFilePath === "./src/test/resources/template/template_W.sp")
   }
 }

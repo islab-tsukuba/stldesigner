@@ -45,7 +45,7 @@ ga_conf:
   # Cross algorithm. blx_alpha is a only supported algorithm.
   cross_algorithm: "blx_alpha"
   # Alpha for blx_alpha.
-  blx_alpha: 3.66
+  blx_alpha: 0.366
   # Generation changing model.
   model: "normal"
 # Path of template spice file.

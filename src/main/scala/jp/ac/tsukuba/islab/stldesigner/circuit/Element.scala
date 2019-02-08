@@ -13,6 +13,8 @@ trait Element {
 
   def shift(): Element
 
+  def cross(element: Element): Element
+
   def random(): Element
 
   def getLength(): Double
@@ -65,6 +67,34 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
   override def setLength(len: Double): Element = {
     values.put("L", UnitUtil.doubleToStr(len))
     this
+  }
+
+  override def cross(element: Element): Element = {
+    if (!element.isInstanceOf[WElement]) {
+      throw new RuntimeException("Input element is not WElement.")
+    }
+    val wElement = element.asInstanceOf[WElement]
+    val len1 = this.getLength()
+    val len2 = wElement.getLength()
+    val nextLen = UnitUtil.doubleToStr(blxAlpha(len1, len2))
+    val impIndex1 = conf.segmentImpList.indexOf(this.getImpedance())
+    val impIndex2 = conf.segmentImpList.indexOf(wElement.getImpedance())
+    var nextImpIndex = math.round(blxAlpha(impIndex1, impIndex2)).toInt
+    if (nextImpIndex < 0) nextImpIndex = 0
+    if (nextImpIndex >= conf.segmentImpList.size()) nextImpIndex = conf.segmentImpList.size() - 1
+    val nextImp = conf.segmentImpList.asScala(nextImpIndex)
+    val vals: mutable.LinkedHashMap[String, String] = mutable.LinkedHashMap()
+    vals.put("L", nextLen)
+    vals.put("RLGCMODEL", nextImp)
+    val ret = this.copy(values=vals)
+    ret
+  }
+
+  private def blxAlpha(p1 : Double, p2 : Double): Double = {
+    val delta = math.abs(p1 - p2)
+    val rangeMin = math.min(p1, p2) - delta * conf.gaConf.blxAlpha
+    val rangeMax = math.max(p1, p2) + delta * conf.gaConf.blxAlpha
+    rangeMin + (rangeMax - rangeMin) * Random.nextDouble()
   }
 
   def getImpedance(): String = {

@@ -42,7 +42,7 @@ case class GeneticAlgorithmConfig(@JsonProperty(value = "max_itr", required = tr
                                   var generationSize: Int,
                                   @JsonProperty(value = "cross_algorithm", required = true)
                                   cross_algorithm: String,
-                                  @JsonProperty(value = "blx_alpha", required = false, defaultValue = "3.66")
+                                  @JsonProperty(value = "blx_alpha", required = false, defaultValue = "0.366")
                                   blxAlpha: Double,
                                   @JsonProperty(value = "model", required = true)
                                   model: String)
