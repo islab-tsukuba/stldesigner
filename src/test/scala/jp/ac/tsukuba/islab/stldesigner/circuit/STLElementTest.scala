@@ -56,7 +56,7 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
   }
 
   "shiftElements()" should "execute single element shift." in {
-    val elements = stlElement.shiftElements(Seq(true, false, false, false, false)).getElements()
+    val elements = stlElement.createShifted(Seq(true, false, false, false, false)).getElements()
     val lengthList = elements.map(_.getLength())
     val subList = lengthList.slice(1, stlElement.sepNum)
     val nonShiftedLen = subList(0)
@@ -65,7 +65,7 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
   }
 
   "assignRandom()" should "return same length as first element." in {
-    val elements = stlElement.assignRandom().getElements()
+    val elements = stlElement.createRandom().getElements()
     assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }
 
@@ -76,7 +76,7 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
       0, conf)
     val parent2 = STLElement(
       "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
-      0, conf).assignRandom()
+      0, conf).createRandom()
     val elements = parent1.cross(parent2).getElements()
     assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }

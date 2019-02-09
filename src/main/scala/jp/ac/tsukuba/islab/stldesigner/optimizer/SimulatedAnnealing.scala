@@ -9,11 +9,11 @@ import scala.concurrent.{Await, Future}
 import scala.util.Random
 
 class SimulatedAnnealing(server: HspiceServer, conf: Config) {
-  var firstState = STLState(SPFile(conf), conf, 0)
+  val baseScore = STLState(SPFile(conf), conf, 0).calcFirstScore(server)
+  var firstState = STLState(SPFile(conf), conf, 0, baseScore)
   Random.setSeed(conf.randomSeed)
 
   def run(): STLState = {
-    firstState.calcFirstScore(server)
     val initTasks: Future[List[SAState]] = Future.sequence {
       (for (i <- 0 until conf.saConf.stateNum)
         yield {

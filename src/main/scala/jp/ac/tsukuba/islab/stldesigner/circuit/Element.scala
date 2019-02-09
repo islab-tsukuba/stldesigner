@@ -7,8 +7,6 @@ import scala.collection.mutable
 import scala.util.Random
 
 trait Element {
-  def deepCopy(): Element
-
   def getString(): String
 
   def shift(): Element
@@ -24,10 +22,6 @@ trait Element {
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
                     conf: Config) extends Element {
-  override def deepCopy(): Element = {
-    this.copy(nodes = nodes.clone(), values = values.clone())
-  }
-
   override def getString(): String = {
     name + " " + nodes.mkString(" ") + " " +
       values.map {
@@ -54,9 +48,10 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     val newImp = conf.segmentImpList.asScala(newImpIndex)
 
-    setLength(newLen)
-    setImpedance(newImp)
-    this
+    val newElement = this.copy()
+    newElement.setLength(newLen)
+    newElement.setImpedance(newImp)
+    newElement
   }
 
   override def getLength(): Double = {
@@ -76,18 +71,18 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     val wElement = element.asInstanceOf[WElement]
     val len1 = this.getLength()
     val len2 = wElement.getLength()
-    val nextLen = UnitUtil.doubleToStr(blxAlpha(len1, len2))
+    val newLen = blxAlpha(len1, len2)
     val impIndex1 = conf.segmentImpList.indexOf(this.getImpedance())
     val impIndex2 = conf.segmentImpList.indexOf(wElement.getImpedance())
-    var nextImpIndex = math.round(blxAlpha(impIndex1, impIndex2)).toInt
-    if (nextImpIndex < 0) nextImpIndex = 0
-    if (nextImpIndex >= conf.segmentImpList.size()) nextImpIndex = conf.segmentImpList.size() - 1
-    val nextImp = conf.segmentImpList.asScala(nextImpIndex)
+    var newImpIndex = math.round(blxAlpha(impIndex1, impIndex2)).toInt
+    if (newImpIndex < 0) newImpIndex = 0
+    if (newImpIndex >= conf.segmentImpList.size()) newImpIndex = conf.segmentImpList.size() - 1
+    val newImp = conf.segmentImpList.asScala(newImpIndex)
     val vals: mutable.LinkedHashMap[String, String] = mutable.LinkedHashMap()
-    vals.put("L", nextLen)
-    vals.put("RLGCMODEL", nextImp)
-    val ret = this.copy(values=vals)
-    ret
+    val newElement = this.copy(values=vals)
+    newElement.setLength(newLen)
+    newElement.setImpedance(newImp)
+    newElement
   }
 
   private def blxAlpha(p1 : Double, p2 : Double): Double = {

@@ -9,11 +9,10 @@ import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 import scala.collection.mutable
 import scala.util.Random
 
-case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
+case class STLState(var spFile: SPFile, conf: Config, var id: Int, firstScore: Double = Double.MaxValue) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
   var evaluator: EyeSizeEvaluator = null
-  var firstScore: Double = Double.MaxValue
 
   def calcScore(server: HspiceServer): Double = {
     if (score != Double.MaxValue && firstScore != Double.MaxValue) {
@@ -36,26 +35,21 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   }
 
   def createNeighbour(): STLState = {
-    val newState = this.copy(spFile = spFile.deepCopy())
-    newState.firstScore = firstScore
-    newState.shiftSegment()
-  }
-
-  private def shiftSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val totalSegNum = stlElements.map(_.sepNum).sum
     val shiftSegmentList = createShiftSegmentList(totalSegNum, conf.saConf.shiftSegmentNum)
     var begin = 0
     val newStlElements = stlElements.map {
       stlElement => {
-        stlElement.shiftElements(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
-        begin = stlElement.sepNum
-        stlElement
+        val shifted = stlElement.createShifted(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
+        begin = shifted.sepNum
+        shifted
       }
     }
-    spFile.setSTLElements(newStlElements)
-    this
+    val newSPFile = spFile.copy(initSTLElements = newStlElements)
+    this.copy(spFile = newSPFile)
   }
+
 
   private def createShiftSegmentList(totalSegment: Int, shiftSegment: Int): Seq[Boolean] = {
     if (shiftSegment == -1 || totalSegment <= shiftSegment) {
@@ -74,16 +68,10 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
   }
 
   def createRandom(): STLState = {
-    val newState = this.copy(spFile = spFile.deepCopy())
-    newState.firstScore = firstScore
-    newState.assignRandomSegment()
-  }
-
-  def assignRandomSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
-    val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
-    spFile.setSTLElements(newStlElements)
-    this
+    val newStlElements = stlElements.map(stlElement => stlElement.createRandom())
+    val newSPFile = spFile.copy(initSTLElements = newStlElements)
+    this.copy(spFile = newSPFile)
   }
 
   def writeData(logger: StateLogger, gen: Int, score: Double): Unit = {
@@ -93,15 +81,14 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     logger.writeData(spFile, evaluator, gen, score)
   }
 
-  def calcFirstScore(server: HspiceServer): Double = {
-    val outputName = "first"
+  def calcFirstScore(server: HspiceServer, outputName: String = "first"): Double = {
     val spFilePath = new File(dirPath, outputName + ".sp")
     val lisFilePath = new File(dirPath, outputName + ".lis")
     spFile.writeFirstToFile(spFilePath)
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
     val evaluator = new EyeSizeEvaluator(lisFile, conf, spFile.getTran())
-    firstScore = evaluator.evaluate()
+    val firstScore = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     firstScore
   }

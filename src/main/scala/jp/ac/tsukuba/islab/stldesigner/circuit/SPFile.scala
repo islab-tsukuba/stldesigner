@@ -8,9 +8,14 @@ import jp.ac.tsukuba.islab.stldesigner.util.Config
 
 import scala.io.Source
 
-case class SPFile(conf: Config) {
+case class SPFile(conf: Config, initSTLElements: List[STLElement] = null) {
   val firstSPFileContent: List[String] = Source.fromFile(conf.spFilePath).getLines.toList
-  var stlElements: List[STLElement] = getFirstSTLElements()
+  var stlElements: List[STLElement] =
+    if (initSTLElements == null) {
+      getFirstSTLElements()
+    } else {
+      initSTLElements
+    }
 
   def getFirstSTLElements(): List[STLElement] = {
     firstSPFileContent.zipWithIndex.filter {
@@ -23,12 +28,6 @@ case class SPFile(conf: Config) {
         }
       }
     }
-  }
-
-  def deepCopy(): SPFile = {
-    val copy = this.copy()
-    copy.setSTLElements(stlElements.map(stlElement => stlElement.deepCopy()))
-    copy
   }
 
   def setSTLElements(elements: List[STLElement]): Unit = {
