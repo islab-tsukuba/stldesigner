@@ -68,4 +68,16 @@ class STLElementTest extends FlatSpec with DiagrammedAssertions with Matchers wi
     val elements = stlElement.assignRandom().getElements()
     assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
   }
+
+  "cross()" should "return crossed elements." in {
+    val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_ga.yml").getPath)
+    val parent1 = STLElement(
+      "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
+      0, conf)
+    val parent2 = STLElement(
+      "W1_STL_5        102     0       optpt1  0       RLGCMODEL=Z50   N=1     L=100m",
+      0, conf).assignRandom()
+    val elements = parent1.cross(parent2).getElements()
+    assert(elements.map(_.getLength()).sum === (0.1 +- 0.000001))
+  }
 }

@@ -34,21 +34,28 @@ case class STLElement(line: String, index: Int, conf: Config) {
         }
         element
     }
-    adjustLength()
+    elements = adjustLength(elements)
     this
   }
 
-  private def adjustLength(): STLElement = {
+  private def adjustLength(elements: Seq[Element]): Seq[Element] = {
     val currentTotalLen = elements.map(_.getLength()).sum
     val ratio = totalLen / currentTotalLen
     elements.map(element => element.setLength(element.getLength() * ratio))
-    this
   }
 
   def assignRandom(): STLElement = {
     elements = this.elements.map(element => element.random())
-    adjustLength()
+    elements = adjustLength(elements)
     this
+  }
+
+  def cross(stlElement: STLElement): STLElement = {
+    val crossedElements = this.elements.zip(stlElement.elements).map
+    { case(element1, element2) => element1.cross(element2) }
+    val childSTLElement = this.copy()
+    childSTLElement.elements = adjustLength(crossedElements)
+    childSTLElement
   }
 
   def getElementLines(): List[String] = {
