@@ -48,7 +48,7 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     val newImp = conf.segmentImpList.asScala(newImpIndex)
 
-    val newElement = this.copy()
+    val newElement = this.copy(values = mutable.LinkedHashMap())
     newElement.setLength(newLen)
     newElement.setImpedance(newImp)
     newElement
@@ -78,8 +78,7 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     if (newImpIndex >= conf.segmentImpList.size()) newImpIndex = conf.segmentImpList.size() - 1
     val newImp = conf.segmentImpList.asScala(newImpIndex)
-    val vals: mutable.LinkedHashMap[String, String] = mutable.LinkedHashMap()
-    val newElement = this.copy(values=vals)
+    val newElement = this.copy(values = mutable.LinkedHashMap())
     newElement.setLength(newLen)
     newElement.setImpedance(newImp)
     newElement
@@ -104,7 +103,7 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     val newLen = Random.nextDouble()
     val newImpIndex = Random.nextInt(conf.segmentImpList.size)
     val newImp = conf.segmentImpList.asScala(newImpIndex)
-    val newElement = this.copy()
+    val newElement = this.copy(values = mutable.LinkedHashMap())
     newElement.setLength(newLen)
     newElement.setImpedance(newImp)
     newElement
