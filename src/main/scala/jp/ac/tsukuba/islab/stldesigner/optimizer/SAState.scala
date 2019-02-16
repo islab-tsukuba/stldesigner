@@ -1,16 +1,15 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
-import jp.ac.tsukuba.islab.stldesigner.circuit.HspiceServer
 import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
 
-class SAState(initState: STLState, server: HspiceServer, conf: Config, name: String, id: Int) {
+class SAState(initState: STLState, conf: Config, name: String, id: Int) {
   var state = initState
   state.id = id
-  var score = initState.calcScore(server)
+  var score = initState.calcScore()
   var bestState = state
   var bestScore = score
   var generation = 1
@@ -20,7 +19,7 @@ class SAState(initState: STLState, server: HspiceServer, conf: Config, name: Str
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
     Future {
-      val nextScore = nextState.calcScore(server)
+      val nextScore = nextState.calcScore()
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore

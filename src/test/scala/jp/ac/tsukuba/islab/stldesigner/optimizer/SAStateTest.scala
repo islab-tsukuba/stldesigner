@@ -13,10 +13,10 @@ class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
   val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val server: HspiceServer = stub[MockableSPServer]
-  val saState = new SAState(new STLStateMock(), server, conf, "test", 0)
+  val saState = new SAState(new STLStateMock(), conf, "test", 0)
 
-  class STLStateMock extends STLState(SPFile(conf), conf, 0) {
-    override def calcScore(server: HspiceServer): Double = 1.0
+  class STLStateMock extends STLState(SPFile(conf), conf, server, 0) {
+    override def calcScore(): Double = 1.0
 
     override def createNeighbour(): STLState = this
 

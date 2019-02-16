@@ -1,7 +1,7 @@
 package jp.ac.tsukuba.islab.stldesigner.runner
 
-import jp.ac.tsukuba.islab.stldesigner.optimizer.SimulatedAnnealing
-import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, HspiceServer}
+import jp.ac.tsukuba.islab.stldesigner.optimizer.{STLState, SimulatedAnnealing}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, HspiceServer, SPFile}
 import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 
 object STLRunner {
@@ -10,7 +10,9 @@ object STLRunner {
       println("Init servers.")
       val conf = ConfigReader().getFromYAML(args(0))
       val server = new HspiceServer(new CommandRunner(), conf)
-      val sa = SimulatedAnnealing(server, conf)
+      val baseScore = STLState(SPFile(conf), conf, server, 0).calcFirstScore()
+      val firstState = STLState(SPFile(conf), conf, server, 0, baseScore)
+      val sa = SimulatedAnnealing(firstState, conf)
       sa.run()
       println("Close servers.")
       server.close()

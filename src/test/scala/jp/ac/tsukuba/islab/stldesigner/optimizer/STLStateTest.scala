@@ -16,7 +16,7 @@ class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory w
   val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val server = stub[MockableSPServer]
   (server.runSpiceFile _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val state = STLState(SPFile(conf), conf, 0, 1.7699115044247788)
+  val state = STLState(SPFile(conf), conf, server, 0, 1.7699115044247788)
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
   val hash = state.spFile.md5Hash
 
@@ -27,12 +27,12 @@ class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory w
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/test.lis"))
-    val firstScore = state.calcFirstScore(server, "test")
+    val firstScore = state.calcFirstScore("test")
     assert(firstScore === 1.7699115044247788)
     // Create dummy lisFile.
     Files.copy(Paths.get("./src/test/resources/output/template_W.lis"),
       Paths.get("/dev/shm/" + hash + "_" + 0 + ".lis"))
-    val score = state.calcScore(server)
+    val score = state.calcScore()
     assert(score === 1.0)
   }
 

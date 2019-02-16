@@ -9,12 +9,12 @@ import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 import scala.collection.mutable
 import scala.util.Random
 
-case class STLState(var spFile: SPFile, conf: Config, var id: Int, firstScore: Double = Double.MaxValue) {
+case class STLState(var spFile: SPFile, conf: Config, server: HspiceServer, var id: Int, firstScore: Double = Double.MaxValue) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
   var evaluator: EyeSizeEvaluator = null
 
-  def calcScore(server: HspiceServer): Double = {
+  def calcScore(): Double = {
     if (score != Double.MaxValue && firstScore != Double.MaxValue) {
       return score / firstScore
     }
@@ -81,7 +81,7 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int, firstScore: D
     logger.writeData(spFile, evaluator, gen, score)
   }
 
-  def calcFirstScore(server: HspiceServer, outputName: String = "first"): Double = {
+  def calcFirstScore(outputName: String = "first"): Double = {
     val spFilePath = new File(dirPath, outputName + ".sp")
     val lisFilePath = new File(dirPath, outputName + ".lis")
     spFile.writeFirstToFile(spFilePath)
