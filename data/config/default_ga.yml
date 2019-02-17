@@ -1,0 +1,52 @@
+# Config name used in output directory creation.
+name: "default"
+# Seed of random class. If it is fixed, STLDesigner generates same result.
+random_seed: 1
+# Hspice server num. Simulation is executed simultaneously in this thread num.
+hspice_server_num: 8
+# Max shift size of segment length specified in [m].
+segment_length_step: 0.001
+# Impedance list of segment.
+segment_imp_list:
+  - "Z30"
+  - "Z35"
+  - "Z40"
+  - "Z45"
+  - "Z50"
+  - "Z55"
+  - "Z60"
+  - "Z65"
+  - "Z70"
+  - "Z75"
+  - "Z80"
+  - "Z85"
+  - "Z90"
+  - "Z95"
+  - "Z100"
+  - "Z105"
+  - "Z110"
+  - "Z115"
+  - "Z120"
+# Optimized weight of output signal. Key is circuit optimize point.
+optimize_weight:
+  optpt3: 1.0
+# Width of eye diagram specified in sec.
+eye_time: 2e-9
+# Margin of eye height calculation. Side of eye diagram is ignored at this rate.
+eye_width_margin: 0.2
+# Optimization logic. We can specify ga(Genetic Algorithm) and sa(Simulated annealing).
+optimization_logic: "ga"
+# Config of simulated annealing.
+ga_conf:
+  # Iteration num.
+  max_itr: 100
+  # Generation size.
+  generation_size: 50
+  # Cross algorithm. blx_alpha is a only supported algorithm.
+  cross_algorithm: "blx_alpha"
+  # Alpha for blx_alpha.
+  blx_alpha: 0.366
+  # Generation changing model.
+  model: "normal"
+# Path of template spice file.
+sp_file_path: "./data/template/template_W.sp"
