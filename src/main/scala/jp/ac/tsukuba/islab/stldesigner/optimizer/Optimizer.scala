@@ -1,6 +1,5 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
-import jp.ac.tsukuba.islab.stldesigner.circuit.{HspiceServer, SPFile}
 import jp.ac.tsukuba.islab.stldesigner.util.Config
 
 import scala.util.Random
