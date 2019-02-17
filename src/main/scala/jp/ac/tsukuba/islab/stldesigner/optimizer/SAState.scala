@@ -14,7 +14,7 @@ class SAState(initState: STLState, conf: Config, name: String, id: Int) {
   var bestScore = score
   var generation = 1
   var probability = 0.0
-  var logger = StateLogger("./output/" + name + "/id_" + id + "/")
+  val logger = StateLogger("./output/" + name + "/id_" + id + "/")
 
   def moveToNextState(): Future[SAState] = {
     val nextState = state.createNeighbour()
@@ -23,7 +23,7 @@ class SAState(initState: STLState, conf: Config, name: String, id: Int) {
       if (nextScore < bestScore) {
         bestState = nextState
         bestScore = nextScore
-        bestState.writeData(logger, generation, bestScore)
+        logger.writeData(bestState.spFile, bestState.evaluator, generation, bestState.score)
       }
       probability = calcProbability(score, nextScore, generation.toDouble / conf.saConf.maxItr.toDouble)
       if (Random.nextDouble() <= probability) {

@@ -29,9 +29,9 @@ case class STLState(var spFile: SPFile, conf: Config, server: HspiceServer, var 
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
     evaluator = new EyeSizeEvaluator(lisFile, conf, spFile.getTran())
-    score = evaluator.evaluate()
+    score = evaluator.evaluate() / firstScore
     deleteFileByPrefix(dirPath, outputName)
-    score / firstScore
+    score
   }
 
   def createNeighbour(): STLState = {

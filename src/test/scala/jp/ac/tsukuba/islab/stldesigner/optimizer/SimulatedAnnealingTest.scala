@@ -21,6 +21,8 @@ class SimulatedAnnealingTest extends FlatSpec with DiagrammedAssertions with Moc
 
     override def createNeighbour(): STLState = this
 
+    override def createCross(state: STLState): STLState = this
+
     override def createRandom(): STLState = this
   }
 
