@@ -50,7 +50,6 @@ case class STLState(var spFile: SPFile, conf: Config, server: HspiceServer, var 
     this.copy(spFile = newSPFile)
   }
 
-
   private def createShiftSegmentList(totalSegment: Int, shiftSegment: Int): Seq[Boolean] = {
     if (shiftSegment == -1 || totalSegment <= shiftSegment) {
       return Seq.fill(totalSegment)(true)
@@ -65,6 +64,17 @@ case class STLState(var spFile: SPFile, conf: Config, server: HspiceServer, var 
       ret(position + skip) = true
     }
     ret
+  }
+
+  def createCross(state: STLState): STLState = {
+    val parent1: List[STLElement] = spFile.getSTLElements()
+    val parent2: List[STLElement] = state.spFile.getSTLElements()
+
+    val newSTLElements = for (i <- parent1.indices) yield {
+      parent1(i).cross(parent2(i))
+    }
+    val newSPFile = spFile.copy(initSTLElements = newSTLElements.toList)
+    this.copy(spFile = newSPFile)
   }
 
   def createRandom(): STLState = {

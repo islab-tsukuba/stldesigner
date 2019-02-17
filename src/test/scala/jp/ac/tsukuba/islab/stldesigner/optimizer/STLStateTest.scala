@@ -13,14 +13,15 @@ import scala.io.Source
 class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory with PrivateMethodTester {
   val cmdr = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
+  val sa_conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val server = stub[MockableSPServer]
   (server.runSpiceFile _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val state = STLState(SPFile(conf), conf, server, 0, 1.7699115044247788)
+  val state = STLState(SPFile(sa_conf), sa_conf, server, 0, 1.7699115044247788)
   val newSpFile = Source.fromFile("./src/test/resources/template/template_W_separated.sp")
+  val newFileLength = newSpFile.getLines().length
   val hash = state.spFile.md5Hash
 
-  class MockableSPServer extends HspiceServer(cmdr, conf)
+  class MockableSPServer extends HspiceServer(cmdr, sa_conf)
 
 
   "calcScore()" should "return score of first state." in {
@@ -49,7 +50,6 @@ class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory w
 
   "createNeighbour()" should "return STLState which has shifted segments." in {
     val newState = state.createNeighbour()
-    val newFileLength = newSpFile.getLines().length
     assert(newState.spFile.getString().split("\n").length === newFileLength)
   }
 
@@ -58,5 +58,13 @@ class STLStateTest extends FlatSpec with DiagrammedAssertions with MockFactory w
     val seq = state invokePrivate createShiftSegmentList(10, 3)
     assert(seq.length === 10)
     assert(seq.count(_ == true) === 3)
+  }
+
+  "createCross()" should "return STLState which has crossed segments." in {
+    val ga_conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_ga.yml").getPath)
+    val parent1 = STLState(SPFile(ga_conf), sa_conf, server, 0, 1.7699115044247788)
+    val parent2 = STLState(SPFile(ga_conf), sa_conf, server, 0, 1.7699115044247788)
+    val newState = parent1.createCross(parent2)
+    assert(newState.spFile.getString().split("\n").length === newFileLength)
   }
 }
