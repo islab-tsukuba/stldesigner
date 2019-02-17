@@ -32,7 +32,12 @@ class GeneticAlgorithm(firstState: STLState, conf: Config) extends Optimizer(fir
       val moveTask: Future[List[STLState]] = Future.sequence {
         (for (_ <- 0 until conf.gaConf.generationSize) yield {
           val parents = rouletteChoice(population, 2)
-          val child = parents.head.createCross(parents(1))
+          var child: STLState = null
+          if (conf.gaConf.mutationProbabiliry > Random.nextDouble()) {
+            child = parents.head.createCross(parents(1))
+          } else {
+            child = parents.head.createRandom()
+          }
           Future {
             child.calcScore()
             child

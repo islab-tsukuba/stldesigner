@@ -42,6 +42,8 @@ ga_conf:
   max_itr: 4000
   # Generation size.
   generation_size: 100
+  # Mutation probability.
+  mutation_probability: 0.01
   # Cross algorithm. blx_alpha is a only supported algorithm.
   cross_algorithm: "blx_alpha"
   # Alpha for blx_alpha.
