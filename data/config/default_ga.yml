@@ -39,7 +39,7 @@ optimization_logic: "ga"
 # Config of simulated annealing.
 ga_conf:
   # Iteration num.
-  max_itr: 100
+  max_itr: 640
   # Generation size.
   generation_size: 50
   # Cross algorithm. blx_alpha is a only supported algorithm.
