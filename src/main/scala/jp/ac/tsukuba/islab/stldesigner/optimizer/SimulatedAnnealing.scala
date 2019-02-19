@@ -28,7 +28,7 @@ class SimulatedAnnealing(firstState: STLState, conf: Config) extends Optimizer(f
         states.map(state => state.moveToNextState())
       }
       states = Await.result(moveTask, Duration.Inf)
-      println("Gen: " + i + 1
+      println("Gen: " + (i + 1)
         + "\nScores: [" + states.map(state => state.score).mkString(" ") + "]"
         + "\nBest Scores: [" + states.map(state => state.bestScore).mkString(" ") + "]"
         + "\nProbavility: [" + states.map(state => state.probability).mkString(" ") + "]")
