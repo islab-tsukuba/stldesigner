@@ -45,7 +45,7 @@ class GeneticAlgorithm(firstState: STLState, conf: Config) extends Optimizer(fir
         }).toList
       }
       population = Await.result(moveTask, Duration.Inf)
-      println("Gen: " + i
+      println("Gen: " + i + 1
         + "\nScores: [" + population.map(state => state.score).mkString(" ") + "]")
       sortedStates = population.sortBy(_.score)
       val bestState = sortedStates.head
