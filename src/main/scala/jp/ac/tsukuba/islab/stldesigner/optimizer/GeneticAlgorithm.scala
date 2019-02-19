@@ -62,19 +62,23 @@ class GeneticAlgorithm(firstState: STLState, conf: Config) extends Optimizer(fir
     val sortedState = mutable.ArrayBuffer(states.sortBy(_.score): _*)
     for (_ <- 0 until choiceNum) yield {
       var totalSum = 0.0
-      sortedState.foreach(totalSum += 1.0 / _.score)
+      sortedState.foreach(state => totalSum += toRouletteScore(state.score))
       val roulettePosition = Random.nextDouble() * totalSum
       var sum = 0.0
       var index = -1
       sortedState.zipWithIndex.foreach{
         case (state, i) =>
-          sum += 1.0 / state.score
+          sum += toRouletteScore(state.score)
           if (sum >= roulettePosition && index == -1) index = i
       }
       val retState = sortedState(index)
       sortedState.remove(index)
       retState
     }
+  }
+
+  private def toRouletteScore(score: Double): Double = {
+    Math.pow(1.0 / score, 2)
   }
 }
 
