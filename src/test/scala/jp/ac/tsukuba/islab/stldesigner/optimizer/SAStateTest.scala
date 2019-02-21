@@ -1,7 +1,7 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
 import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, ExecResult, HspiceServer, SPFile}
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{DiagrammedAssertions, FlatSpec}
 
@@ -11,12 +11,12 @@ import scala.concurrent.duration.Duration
 class SAStateTest extends FlatSpec with DiagrammedAssertions with MockFactory {
   val cmdr: CommandRunner = stub[CommandRunner]
   (cmdr.runCommand _).when(*).returns(ExecResult(0, Seq(), Seq()))
-  val conf = ConfigBuilder().getDefaultConfig()
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val server: HspiceServer = stub[MockableSPServer]
-  val saState = new SAState(new STLStateMock(), server, conf, "test", 0)
+  val saState = new SAState(new STLStateMock(), conf, "test", 0)
 
-  class STLStateMock extends STLState(SPFile(conf), conf, 0) {
-    override def calcScore(server: HspiceServer): Double = 1.0
+  class STLStateMock extends STLState(SPFile(conf), conf, server, 0) {
+    override def calcScore(): Double = 1.0
 
     override def createNeighbour(): STLState = this
 

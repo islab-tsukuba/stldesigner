@@ -9,13 +9,12 @@ import jp.ac.tsukuba.islab.stldesigner.util.{Config, StateLogger}
 import scala.collection.mutable
 import scala.util.Random
 
-case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
+case class STLState(var spFile: SPFile, conf: Config, server: HspiceServer, var id: Int, firstScore: Double = Double.MaxValue) {
   val dirPath = "/dev/shm/"
   var score: Double = Double.MaxValue
   var evaluator: EyeSizeEvaluator = null
-  var firstScore: Double = Double.MaxValue
 
-  def calcScore(server: HspiceServer): Double = {
+  def calcScore(): Double = {
     if (score != Double.MaxValue && firstScore != Double.MaxValue) {
       return score / firstScore
     }
@@ -30,31 +29,25 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
     evaluator = new EyeSizeEvaluator(lisFile, conf, spFile.getTran())
-    score = evaluator.evaluate()
+    score = evaluator.evaluate() / firstScore
     deleteFileByPrefix(dirPath, outputName)
-    score / firstScore
+    score
   }
 
   def createNeighbour(): STLState = {
-    val newState = this.copy(spFile = spFile.deepCopy())
-    newState.firstScore = firstScore
-    newState.shiftSegment()
-  }
-
-  private def shiftSegment(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
     val totalSegNum = stlElements.map(_.sepNum).sum
     val shiftSegmentList = createShiftSegmentList(totalSegNum, conf.saConf.shiftSegmentNum)
     var begin = 0
     val newStlElements = stlElements.map {
       stlElement => {
-        stlElement.shiftElements(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
-        begin = stlElement.sepNum
-        stlElement
+        val shifted = stlElement.createShifted(shiftSegmentList.slice(begin, begin + stlElement.sepNum))
+        begin = shifted.sepNum
+        shifted
       }
     }
-    spFile.setSTLElements(newStlElements)
-    this
+    val newSPFile = spFile.copy(initSTLElements = newStlElements)
+    this.copy(spFile = newSPFile)
   }
 
   private def createShiftSegmentList(totalSegment: Int, shiftSegment: Int): Seq[Boolean] = {
@@ -73,17 +66,22 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     ret
   }
 
-  def createRandom(): STLState = {
-    val newState = this.copy(spFile = spFile.deepCopy())
-    newState.firstScore = firstScore
-    newState.assignRandomSegment()
+  def createCross(state: STLState): STLState = {
+    val parent1: List[STLElement] = spFile.getSTLElements()
+    val parent2: List[STLElement] = state.spFile.getSTLElements()
+
+    val newSTLElements = for (i <- parent1.indices) yield {
+      parent1(i).cross(parent2(i))
+    }
+    val newSPFile = spFile.copy(initSTLElements = newSTLElements.toList)
+    this.copy(spFile = newSPFile)
   }
 
-  def assignRandomSegment(): STLState = {
+  def createRandom(): STLState = {
     val stlElements: List[STLElement] = spFile.getSTLElements()
-    val newStlElements = stlElements.map(stlElement => stlElement.assignRandom())
-    spFile.setSTLElements(newStlElements)
-    this
+    val newStlElements = stlElements.map(stlElement => stlElement.createRandom())
+    val newSPFile = spFile.copy(initSTLElements = newStlElements)
+    this.copy(spFile = newSPFile)
   }
 
   def writeData(logger: StateLogger, gen: Int, score: Double): Unit = {
@@ -93,15 +91,14 @@ case class STLState(var spFile: SPFile, conf: Config, var id: Int) {
     logger.writeData(spFile, evaluator, gen, score)
   }
 
-  def calcFirstScore(server: HspiceServer): Double = {
-    val outputName = "first"
+  def calcFirstScore(outputName: String = "first"): Double = {
     val spFilePath = new File(dirPath, outputName + ".sp")
     val lisFilePath = new File(dirPath, outputName + ".lis")
     spFile.writeFirstToFile(spFilePath)
     server.runSpiceFile(spFilePath.getPath)
     val lisFile = LisFile(lisFilePath.getPath, conf)
     val evaluator = new EyeSizeEvaluator(lisFile, conf, spFile.getTran())
-    firstScore = evaluator.evaluate()
+    val firstScore = evaluator.evaluate()
     deleteFileByPrefix(dirPath, outputName)
     firstScore
   }

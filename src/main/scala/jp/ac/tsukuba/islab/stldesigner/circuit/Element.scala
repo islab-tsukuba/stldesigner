@@ -7,11 +7,11 @@ import scala.collection.mutable
 import scala.util.Random
 
 trait Element {
-  def deepCopy(): Element
-
   def getString(): String
 
   def shift(): Element
+
+  def cross(element: Element): Element
 
   def random(): Element
 
@@ -22,10 +22,6 @@ trait Element {
 
 case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHashMap[String, String],
                     conf: Config) extends Element {
-  override def deepCopy(): Element = {
-    this.copy(nodes = nodes.clone(), values = values.clone())
-  }
-
   override def getString(): String = {
     name + " " + nodes.mkString(" ") + " " +
       values.map {
@@ -52,9 +48,10 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     if (newImpIndex < 0) newImpIndex = 0
     val newImp = conf.segmentImpList.asScala(newImpIndex)
 
-    setLength(newLen)
-    setImpedance(newImp)
-    this
+    val newElement = this.copy(values = values.clone())
+    newElement.setLength(newLen)
+    newElement.setImpedance(newImp)
+    newElement
   }
 
   override def getLength(): Double = {
@@ -65,6 +62,33 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
   override def setLength(len: Double): Element = {
     values.put("L", UnitUtil.doubleToStr(len))
     this
+  }
+
+  override def cross(element: Element): Element = {
+    if (!element.isInstanceOf[WElement]) {
+      throw new RuntimeException("Input element is not WElement.")
+    }
+    val wElement = element.asInstanceOf[WElement]
+    val len1 = this.getLength()
+    val len2 = wElement.getLength()
+    val newLen = blxAlpha(len1, len2)
+    val impIndex1 = conf.segmentImpList.indexOf(this.getImpedance())
+    val impIndex2 = conf.segmentImpList.indexOf(wElement.getImpedance())
+    var newImpIndex = math.round(blxAlpha(impIndex1, impIndex2)).toInt
+    if (newImpIndex < 0) newImpIndex = 0
+    if (newImpIndex >= conf.segmentImpList.size()) newImpIndex = conf.segmentImpList.size() - 1
+    val newImp = conf.segmentImpList.asScala(newImpIndex)
+    val newElement = this.copy(values = values.clone())
+    newElement.setLength(newLen)
+    newElement.setImpedance(newImp)
+    newElement
+  }
+
+  private def blxAlpha(p1 : Double, p2 : Double): Double = {
+    val delta = math.abs(p1 - p2)
+    val rangeMin = math.min(p1, p2) - delta * conf.gaConf.blxAlpha
+    val rangeMax = math.max(p1, p2) + delta * conf.gaConf.blxAlpha
+    rangeMin + (rangeMax - rangeMin) * Random.nextDouble()
   }
 
   def getImpedance(): String = {
@@ -79,7 +103,7 @@ case class WElement(name: String, nodes: Array[String], values: mutable.LinkedHa
     val newLen = Random.nextDouble()
     val newImpIndex = Random.nextInt(conf.segmentImpList.size)
     val newImp = conf.segmentImpList.asScala(newImpIndex)
-    val newElement = this.copy()
+    val newElement = this.copy(values = values.clone())
     newElement.setLength(newLen)
     newElement.setImpedance(newImp)
     newElement

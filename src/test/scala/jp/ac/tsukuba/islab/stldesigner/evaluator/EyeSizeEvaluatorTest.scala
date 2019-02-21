@@ -1,11 +1,11 @@
 package jp.ac.tsukuba.islab.stldesigner.evaluator
 
 import jp.ac.tsukuba.islab.stldesigner.circuit.{LisFile, Tran}
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalatest._
 
 class EyeSizeEvaluatorTest extends FlatSpec with DiagrammedAssertions with PrivateMethodTester {
-  val defaultConfig = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
+  val defaultConfig = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val lisFile = new LisFile(
     "./src/test/resources/output/template_W.lis", defaultConfig)
   val eyeSizeEvaluator = new EyeSizeEvaluator(lisFile, defaultConfig, Tran(".TRAN 5p 100n 0n"))

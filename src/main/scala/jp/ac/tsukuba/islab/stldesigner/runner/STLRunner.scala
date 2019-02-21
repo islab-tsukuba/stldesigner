@@ -1,17 +1,24 @@
 package jp.ac.tsukuba.islab.stldesigner.runner
 
-import jp.ac.tsukuba.islab.stldesigner.optimizer.SimulatedAnnealing
-import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, HspiceServer}
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.optimizer.{GeneticAlgorithm, Optimizer, STLState, SimulatedAnnealing}
+import jp.ac.tsukuba.islab.stldesigner.circuit.{CommandRunner, HspiceServer, SPFile}
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 
 object STLRunner {
   def main(args: Array[String]) {
     if (args.size == 1) {
       println("Init servers.")
-      val conf = ConfigBuilder().getFromYAML(args(0))
+      val conf = ConfigReader().getFromYAML(args(0))
       val server = new HspiceServer(new CommandRunner(), conf)
-      val sa = SimulatedAnnealing(server, conf)
-      sa.run()
+      val firstScore = STLState(SPFile(conf), conf, server, 0).calcFirstScore()
+      val firstState = STLState(SPFile(conf), conf, server, 0, firstScore)
+      var optimizer: Optimizer = null
+      conf.optimizationLogic match {
+        case "sa" => optimizer = SimulatedAnnealing(firstState, conf)
+        case "ga" => optimizer = GeneticAlgorithm(firstState, conf)
+        case _ => optimizer = SimulatedAnnealing(firstState, conf)
+      }
+      optimizer.run()
       println("Close servers.")
       server.close()
     } else {

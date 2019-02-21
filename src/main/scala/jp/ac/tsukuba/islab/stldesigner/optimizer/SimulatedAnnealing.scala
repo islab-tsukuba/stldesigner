@@ -1,25 +1,20 @@
 package jp.ac.tsukuba.islab.stldesigner.optimizer
 
-import jp.ac.tsukuba.islab.stldesigner.circuit.{HspiceServer, SPFile}
 import jp.ac.tsukuba.islab.stldesigner.util.Config
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import scala.util.Random
 
-class SimulatedAnnealing(server: HspiceServer, conf: Config) {
-  var firstState = STLState(SPFile(conf), conf, 0)
-  Random.setSeed(conf.randomSeed)
+class SimulatedAnnealing(firstState: STLState, conf: Config) extends Optimizer(firstState, conf) {
 
   def run(): STLState = {
-    firstState.calcFirstScore(server)
     val initTasks: Future[List[SAState]] = Future.sequence {
       (for (i <- 0 until conf.saConf.stateNum)
         yield {
           val initState = firstState.createNeighbour()
           Future {
-            new SAState(initState, server, conf, conf.name, i + 1)
+            new SAState(initState, conf, conf.name, i + 1)
           }
         }).toList
     }
@@ -33,7 +28,7 @@ class SimulatedAnnealing(server: HspiceServer, conf: Config) {
         states.map(state => state.moveToNextState())
       }
       states = Await.result(moveTask, Duration.Inf)
-      println("Gen: " + i
+      println("Gen: " + (i + 1)
         + "\nScores: [" + states.map(state => state.score).mkString(" ") + "]"
         + "\nBest Scores: [" + states.map(state => state.bestScore).mkString(" ") + "]"
         + "\nProbavility: [" + states.map(state => state.probability).mkString(" ") + "]")
@@ -45,6 +40,6 @@ class SimulatedAnnealing(server: HspiceServer, conf: Config) {
 }
 
 object SimulatedAnnealing {
-  def apply(server: HspiceServer, conf: Config):
-  SimulatedAnnealing = new SimulatedAnnealing(server, conf)
+  def apply(firstState: STLState, conf: Config):
+  SimulatedAnnealing = new SimulatedAnnealing(firstState, conf)
 }

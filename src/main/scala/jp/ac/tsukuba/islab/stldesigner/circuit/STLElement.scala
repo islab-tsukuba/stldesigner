@@ -4,7 +4,7 @@ import jp.ac.tsukuba.islab.stldesigner.util.{Config, UnitUtil}
 
 import scala.collection.mutable
 
-case class STLElement(line: String, index: Int, conf: Config) {
+case class STLElement(line: String, index: Int, conf: Config, initElements: Seq[Element] = null) {
   val splitLine: Array[String] = line.split("""\s+""")
   val name: String = splitLine(0)
   val nameIndex: Int = """^.(\d)_.*""".r.findAllIn(name).group(1).toInt
@@ -15,16 +15,15 @@ case class STLElement(line: String, index: Int, conf: Config) {
   val values: mutable.LinkedHashMap[String, String] = createValueMap()
   val lenStr = this.values.getOrElse("L", throw new RuntimeException("Length is not defined."))
   val totalLen = UnitUtil.strToDouble(lenStr).getOrElse(0.0)
-  var elements: Seq[Element] = createElements()
+  var elements: Seq[Element] =
+    if (initElements==null) {
+      createElements()
+    } else {
+      initElements
+    }
 
-  def deepCopy(): STLElement = {
-    val copy = this.copy()
-    copy.elements = elements.map(element => element.deepCopy())
-    copy
-  }
-
-  def shiftElements(shiftList: Seq[Boolean]): STLElement = {
-    elements =
+  def createShifted(shiftList: Seq[Boolean]): STLElement = {
+    val shiftedElements =
       for (i <- shiftList.indices) yield {
         var element: Element = null
         if (shiftList(i)) {
@@ -34,21 +33,28 @@ case class STLElement(line: String, index: Int, conf: Config) {
         }
         element
     }
-    adjustLength()
-    this
+    val newElements = adjustLength(shiftedElements)
+    this.copy(initElements = newElements)
   }
 
-  private def adjustLength(): STLElement = {
+  private def adjustLength(elements: Seq[Element]): Seq[Element] = {
     val currentTotalLen = elements.map(_.getLength()).sum
     val ratio = totalLen / currentTotalLen
     elements.map(element => element.setLength(element.getLength() * ratio))
-    this
   }
 
-  def assignRandom(): STLElement = {
-    elements = this.elements.map(element => element.random())
-    adjustLength()
-    this
+  def createRandom(): STLElement = {
+    val newElements = adjustLength(
+      this.elements.map(element => element.random()))
+    this.copy(initElements = newElements)
+  }
+
+  def cross(stlElement: STLElement): STLElement = {
+    val crossedElements = this.elements.zip(stlElement.elements).map
+    { case(element1, element2) => element1.cross(element2) }
+    val newSTLElement = this.copy()
+    newSTLElement.elements = adjustLength(crossedElements)
+    newSTLElement
   }
 
   def getElementLines(): List[String] = {

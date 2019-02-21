@@ -1,12 +1,12 @@
 package jp.ac.tsukuba.islab.stldesigner.circuit
 
-import jp.ac.tsukuba.islab.stldesigner.util.ConfigBuilder
+import jp.ac.tsukuba.islab.stldesigner.util.ConfigReader
 import org.scalatest._
 
 import scala.io.Source
 
 class SPFileTest extends FlatSpec with DiagrammedAssertions {
-  val conf = ConfigBuilder().getFromYAML("./src/test/resources/config/test.yml")
+  val conf = ConfigReader().getFromYAML(getClass().getResource("/config/test_sa.yml").getPath)
   val spFile = SPFile(conf)
 
   "getFirstSTLElements()" should "return STL element." in {
