@@ -3,7 +3,7 @@
 STLDesigner is a optimizer for Segmental Transmission Line(STL)
 
 ## Requirements
-* Apache maven
+* [sbt](www.scala-sbt.org)
 * HSPICE
 
 ## Usage
@@ -11,13 +11,13 @@ STLDesigner is a optimizer for Segmental Transmission Line(STL)
 Run test.
 
 ```
-$ mvn test
+$ sbt test
 
 ```
 
 Optimize STL.
 ```
-$ mvn "run ./data/config/default.yml"
+$ sbt "run ./data/config/default.yml"
 
 ```
 
