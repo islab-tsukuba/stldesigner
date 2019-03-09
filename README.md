@@ -38,3 +38,7 @@ $ python score_graph.py -h
 ```
 
 Sample command is written in tools/README.md.
+
+## Related work
+[Signal integrity improvement in lossy transmission line using segmental transmission line](https://ieeexplore.ieee.org/document/6469402)
+[Evolutionary design of high signal integrity interconnection based on eye-diagram](https://link.springer.com/article/10.1007/s10015-018-0433-2)
